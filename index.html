@@ -79,16 +79,13 @@
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path></svg>
     </button>
 
-    <!-- SKELETON LOADER (Replaces Spinning Loaders) -->
+    <!-- SKELETON LOADER -->
     <div id="skeletonLoader" class="hidden w-full max-w-2xl mt-2 sm:mt-4 animate-pulse">
-        <!-- Skeleton Header -->
         <div class="flex justify-between items-center mb-6 sm:mb-8 px-1">
             <div class="h-8 bg-gray-200 dark:bg-gray-700 rounded-md w-48 sm:w-64"></div>
             <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
         </div>
-        <!-- Skeleton Pill -->
         <div class="h-12 bg-gray-200 dark:bg-gray-700 rounded-xl w-full sm:max-w-sm mb-6 sm:mb-8"></div>
-        <!-- Skeleton Score Card -->
         <div class="bg-brandSurface dark:bg-gray-800 rounded-2xl border border-brandBorder dark:border-gray-700 shadow-sm p-5 sm:p-8 flex items-center justify-between gap-6 mb-4 sm:mb-6">
              <div class="space-y-4 w-1/2">
                   <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-32"></div>
@@ -97,14 +94,11 @@
              </div>
              <div class="w-24 h-24 sm:w-28 sm:h-28 bg-gray-200 dark:bg-gray-700 rounded-full flex-shrink-0"></div>
         </div>
-        <!-- Skeleton Heatmap -->
         <div class="bg-brandSurface dark:bg-gray-800 p-5 sm:p-8 rounded-2xl shadow-sm border border-brandBorder dark:border-gray-700 mb-6 h-32">
              <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded w-32 mb-4"></div>
              <div class="h-12 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
         </div>
-        <!-- Skeleton List -->
         <div class="space-y-3">
-             <div class="h-16 bg-brandSurface dark:bg-gray-800 border border-brandBorder dark:border-gray-700 rounded-xl"></div>
              <div class="h-16 bg-brandSurface dark:bg-gray-800 border border-brandBorder dark:border-gray-700 rounded-xl"></div>
              <div class="h-16 bg-brandSurface dark:bg-gray-800 border border-brandBorder dark:border-gray-700 rounded-xl"></div>
         </div>
@@ -233,10 +227,11 @@
     </div>
 
     <!-- SCORE BREAKDOWN BOTTOM SHEET / SIDE TAB -->
+    <!-- BUG FIX: Added sm:left-auto so the sidebar correctly attaches to the right side on desktop! -->
     <div id="scoreTabOverlay" onclick="closeScoreTab()" class="hidden fixed inset-0 z-40 bg-brandPrimary bg-opacity-40 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
     
     <div id="scoreTab" class="fixed z-50 bg-brandSurface dark:bg-gray-800 shadow-2xl flex flex-col sm:border-l border-brandBorder dark:border-gray-700
-        bottom-0 left-0 w-full h-[55vh] rounded-t-3xl sm:rounded-none sm:top-0 sm:right-0 sm:w-96 sm:h-full
+        bottom-0 left-0 w-full h-[55vh] rounded-t-3xl sm:rounded-none sm:top-0 sm:left-auto sm:right-0 sm:w-96 sm:h-full
         transform transition-transform duration-300 translate-y-full sm:translate-y-0 sm:translate-x-full">
         
         <div class="p-6 sm:p-8 flex-grow overflow-y-auto relative">
@@ -341,7 +336,6 @@
             
             const saved = localStorage.getItem('preface_student_creds');
             if(saved) {
-                // Instantly show the skeleton loader shell on auto-login
                 document.getElementById('skeletonLoader').classList.remove('hidden');
                 const creds = JSON.parse(saved);
                 document.getElementById('lastName').value = creds.last_name;
@@ -360,7 +354,6 @@
             }
         };
 
-        // Scroll to Top Logic
         window.addEventListener('scroll', () => {
             const btn = document.getElementById('backToTopBtn');
             if (window.scrollY > 250) {
@@ -465,7 +458,6 @@
 
             errorDiv.classList.add('hidden');
             
-            // Manual login uses the skeleton loader instead of button spinners now!
             document.getElementById('loginSection').classList.add('hidden');
             document.getElementById('skeletonLoader').classList.remove('hidden');
 
@@ -500,7 +492,6 @@
                     document.getElementById('classEmptyState').classList.remove('hidden');
                 }
 
-                // Hide skeleton, show actual app
                 document.getElementById('skeletonLoader').classList.add('hidden');
                 fadeInSwoop('appSection'); 
                 switchTab('dashboard'); 
@@ -525,15 +516,22 @@
             grid.innerHTML = '';
             list.innerHTML = '';
             
-            // Ensure classes are sorted Newest at the top (Descending Date)
-            dashboard.history.sort((a, b) => new Date(b.date) - new Date(a.date));
+            // FIX: Explicitly sort classes putting Newest at the Top, Oldest at the bottom.
+            dashboard.history.sort((a, b) => {
+                const timeA = (a.date && a.date !== 'TBA') ? new Date(a.date).getTime() : 0;
+                const timeB = (b.date && b.date !== 'TBA') ? new Date(b.date).getTime() : 0;
+                // If dates are identical (or both TBA), sort by happening_id as a reliable fallback
+                if (timeA === timeB) {
+                    return parseInt(b.happening_id || 0) - parseInt(a.happening_id || 0);
+                }
+                return timeB - timeA; 
+            });
 
-            // Heatmap logic: Populates backwards to ensure oldest blocks start at top-left
             for(let i = 0; i < 40; i++) { 
                 const block = document.createElement('div');
                 block.className = 'w-4 h-4 sm:w-5 sm:h-5 rounded-[2px] sm:rounded-[3px] relative group';
                 
-                const index = dashboard.history.length - 1 - i; // Gets the oldest first
+                const index = dashboard.history.length - 1 - i; 
                 if(index >= 0 && index < dashboard.history.length) {
                     const cls = dashboard.history[index]; 
                     const pts = cls.points;
@@ -556,7 +554,6 @@
                 grid.appendChild(block);
             }
 
-            // History List Builder
             dashboard.history.forEach(cls => {
                 const listItem = document.createElement('div');
                 listItem.className = 'flex items-center justify-between p-3 sm:p-4 bg-white dark:bg-gray-800 border border-brandBorder dark:border-gray-700 rounded-xl shadow-sm hover:border-gray-300 dark:hover:border-gray-500 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-md cursor-pointer';
@@ -577,7 +574,6 @@
                 list.appendChild(listItem);
             });
             
-            // Guided Empty State for brand new students!
             if(dashboard.history.length === 0) {
                 list.innerHTML = `
                     <div class="text-center py-10 px-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-dashed border-gray-300 dark:border-gray-600">
@@ -644,7 +640,6 @@
             setTimeout(() => { overlay.classList.add('hidden'); }, 300);
         }
 
-        // Swipe Down logic for Mobile Bottom Sheet
         let touchStartY = 0;
         const scoreTabEl = document.getElementById('scoreTab');
         scoreTabEl.addEventListener('touchstart', e => { touchStartY = e.changedTouches[0].screenY; }, {passive: true});

@@ -118,90 +118,99 @@
             <button onclick="logout()" class="text-sm text-brandSecondary dark:text-gray-400 hover:text-brandPrimary dark:hover:text-white font-medium transition-colors whitespace-nowrap">Log out</button>
         </div>
 
-        <div class="grid grid-cols-2 sm:flex sm:p-1 sm:space-x-1 bg-gray-100 dark:bg-gray-800 rounded-xl w-full sm:max-w-fit mb-6 sm:mb-8 border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="py-2.5 sm:px-5 sm:py-2 text-sm font-semibold sm:rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm transition-all text-center">My Dashboard</button>
-            <button onclick="switchTab('class')" id="tab-class" class="py-2.5 sm:px-5 sm:py-2 text-sm font-semibold sm:rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all text-center">Today's Class</button>
+        <!-- NEW Pill Navigation Switch with Smooth Slide -->
+        <div class="relative flex p-1 bg-gray-100 dark:bg-gray-800 rounded-xl w-full sm:max-w-sm mb-6 sm:mb-8 border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <!-- The sliding background block -->
+            <div id="tab-highlight" class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-white dark:bg-gray-700 rounded-lg shadow-sm transition-transform duration-300 ease-out transform translate-x-0"></div>
+            
+            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="relative z-10 flex-1 py-2 text-sm font-semibold text-gray-900 dark:text-white transition-colors duration-300 text-center">My Dashboard</button>
+            <button onclick="switchTab('class')" id="tab-class" class="relative z-10 flex-1 py-2 text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-300 text-center">Today's Class</button>
         </div>
 
-        <!-- TAB 1: DASHBOARD -->
-        <div id="view-dashboard" class="space-y-4 sm:space-y-6 block">
+        <!-- STACKED GRID WRAPPER For Smooth Content Sliding -->
+        <div class="grid w-full overflow-hidden">
             
-            <div class="bg-brandSurface dark:bg-gray-800 rounded-2xl border border-brandBorder dark:border-gray-700 shadow-sm p-5 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
-               <div class="text-center sm:text-left order-2 sm:order-1">
-                   <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Total Preface Points</h2>
-                   <div class="text-5xl sm:text-6xl font-extrabold text-brandPrimary dark:text-white mt-1 mb-1 tracking-tight" id="scoreText">0</div>
-                   <p class="text-sm text-brandSecondary dark:text-gray-400 font-medium">Out of <span id="maxScoreDisplay" class="text-gray-700 dark:text-gray-300">200</span> possible points</p>
-               </div>
-               <div class="w-24 h-24 sm:w-28 sm:h-28 relative flex-shrink-0 order-1 sm:order-2">
-                   <svg viewBox="0 0 36 36" class="circular-chart">
-                       <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                       <path id="scoreCircle" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                   </svg>
-               </div>
-            </div>
+            <!-- TAB 1: DASHBOARD -->
+            <div id="view-dashboard" class="col-start-1 row-start-1 w-full transition-all duration-500 ease-in-out transform translate-x-0 opacity-100 z-10 pointer-events-auto space-y-4 sm:space-y-6">
+                
+                <div class="bg-brandSurface dark:bg-gray-800 rounded-2xl border border-brandBorder dark:border-gray-700 shadow-sm p-5 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
+                   <div class="text-center sm:text-left order-2 sm:order-1">
+                       <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Total Preface Points</h2>
+                       <div class="text-5xl sm:text-6xl font-extrabold text-brandPrimary dark:text-white mt-1 mb-1 tracking-tight" id="scoreText">0</div>
+                       <p class="text-sm text-brandSecondary dark:text-gray-400 font-medium">Out of <span id="maxScoreDisplay" class="text-gray-700 dark:text-gray-300">200</span> possible points</p>
+                   </div>
+                   <div class="w-24 h-24 sm:w-28 sm:h-28 relative flex-shrink-0 order-1 sm:order-2">
+                       <svg viewBox="0 0 36 36" class="circular-chart">
+                           <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                           <path id="scoreCircle" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                       </svg>
+                   </div>
+                </div>
 
-            <div class="bg-brandSurface dark:bg-gray-800 p-5 sm:p-8 rounded-2xl shadow-sm border border-brandBorder dark:border-gray-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
-                <div class="flex-shrink-0 w-full sm:w-auto flex flex-row sm:flex-col justify-between items-center sm:items-start">
-                    <h3 class="font-bold text-gray-900 dark:text-white text-sm sm:text-base">Class Heatmap</h3>
-                    <div class="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium sm:mt-1.5">
-                        <span>Less</span>
-                        <div class="w-3 h-3 sm:w-4 sm:h-4 rounded-[2px] sm:rounded-sm block-0"></div>
-                        <div class="w-3 h-3 sm:w-4 sm:h-4 rounded-[2px] sm:rounded-sm block-1"></div>
-                        <div class="w-3 h-3 sm:w-4 sm:h-4 rounded-[2px] sm:rounded-sm block-2"></div>
-                        <div class="w-3 h-3 sm:w-4 sm:h-4 rounded-[2px] sm:rounded-sm block-3"></div>
-                        <span>More</span>
+                <div class="bg-brandSurface dark:bg-gray-800 p-5 sm:p-8 rounded-2xl shadow-sm border border-brandBorder dark:border-gray-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
+                    <div class="flex-shrink-0 w-full sm:w-auto flex flex-row sm:flex-col justify-between items-center sm:items-start">
+                        <h3 class="font-bold text-gray-900 dark:text-white text-sm sm:text-base">Class Heatmap</h3>
+                        <div class="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium sm:mt-1.5">
+                            <span>Less</span>
+                            <div class="w-3 h-3 sm:w-4 sm:h-4 rounded-[2px] sm:rounded-sm block-0"></div>
+                            <div class="w-3 h-3 sm:w-4 sm:h-4 rounded-[2px] sm:rounded-sm block-1"></div>
+                            <div class="w-3 h-3 sm:w-4 sm:h-4 rounded-[2px] sm:rounded-sm block-2"></div>
+                            <div class="w-3 h-3 sm:w-4 sm:h-4 rounded-[2px] sm:rounded-sm block-3"></div>
+                            <span>More</span>
+                        </div>
+                    </div>
+                    <div id="heatmapGrid" class="grid grid-cols-10 gap-1 sm:gap-1.5 w-auto">
+                        <!-- Heatmap injected via JS -->
                     </div>
                 </div>
-                <div id="heatmapGrid" class="grid grid-cols-10 gap-1 sm:gap-1.5 w-auto">
-                    <!-- Heatmap injected via JS -->
+
+                <div class="pt-2 sm:pt-4 pb-12">
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-1 text-sm sm:text-base">Score Record</h3>
+                    <div id="historyListContainer" class="space-y-2 sm:space-y-3">
+                        <!-- History injected via JS -->
+                    </div>
                 </div>
             </div>
 
-            <div class="pt-2 sm:pt-4 pb-12">
-                <h3 class="font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-1 text-sm sm:text-base">Score Record</h3>
-                <div id="historyListContainer" class="space-y-2 sm:space-y-3">
-                    <!-- History injected via JS -->
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 2: TODAY'S CLASS -->
-        <div id="view-class" class="hidden space-y-6 pb-20">
-            <div id="classActiveState" class="hidden bg-brandSurface dark:bg-gray-800 p-6 sm:p-12 rounded-2xl shadow-sm border border-brandBorder dark:border-gray-700">
-                <div class="text-center mb-8 sm:mb-10 border-b border-gray-100 dark:border-gray-700 pb-6 sm:pb-8">
-                    <h2 class="text-2xl sm:text-3xl font-extrabold text-brandPrimary dark:text-white" id="courseNameDisplay">Course</h2>
-                    <p class="text-brandSecondary dark:text-gray-400 mt-1 sm:mt-2 font-medium">Session <span id="sessionDisplay"></span></p>
-                </div>
-                
-                <div class="space-y-4 max-w-sm mx-auto">
-                    <div class="flex flex-col items-center w-full">
-                        <button id="btnPre" onclick="startAssessment('Pre')" class="w-full btn-gradient px-4 py-3 sm:py-4 rounded-xl shadow-sm flex justify-center items-center font-bold text-sm tracking-wide">Start Pre-Assessment</button>
-                        <div id="badgePre" class="hidden w-full px-4 py-3 sm:py-4 rounded-xl text-center font-bold shadow-sm text-sm tracking-wide"></div>
+            <!-- TAB 2: TODAY'S CLASS -->
+            <div id="view-class" class="col-start-1 row-start-1 w-full transition-all duration-500 ease-in-out transform translate-x-full opacity-0 z-0 pointer-events-none space-y-6 pb-20">
+                <div id="classActiveState" class="hidden bg-brandSurface dark:bg-gray-800 p-6 sm:p-12 rounded-2xl shadow-sm border border-brandBorder dark:border-gray-700">
+                    <div class="text-center mb-8 sm:mb-10 border-b border-gray-100 dark:border-gray-700 pb-6 sm:pb-8">
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-brandPrimary dark:text-white" id="courseNameDisplay">Course</h2>
+                        <p class="text-brandSecondary dark:text-gray-400 mt-1 sm:mt-2 font-medium">Session <span id="sessionDisplay"></span></p>
                     </div>
                     
-                    <div class="flex flex-col items-center w-full pt-2">
-                        <button id="btnPost" onclick="startAssessment('Post')" class="w-full btn-disabled px-4 py-3 sm:py-4 rounded-xl shadow-sm flex justify-center items-center gap-2 text-sm tracking-wide">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
-                            Post-Assessment
-                        </button>
-                        <div id="badgePost" class="hidden w-full px-4 py-3 sm:py-4 rounded-xl text-center font-bold shadow-sm text-sm tracking-wide"></div>
-                        <p id="postHelperText" class="text-xs text-brandSecondary dark:text-gray-400 mt-3 sm:mt-4 text-center font-medium">Unlocks 10 minutes after Pre-Assessment.</p>
+                    <div class="space-y-4 max-w-sm mx-auto">
+                        <div class="flex flex-col items-center w-full">
+                            <button id="btnPre" onclick="startAssessment('Pre')" class="w-full btn-gradient px-4 py-3 sm:py-4 rounded-xl shadow-sm flex justify-center items-center font-bold text-sm tracking-wide">Start Pre-Assessment</button>
+                            <div id="badgePre" class="hidden w-full px-4 py-3 sm:py-4 rounded-xl text-center font-bold shadow-sm text-sm tracking-wide"></div>
+                        </div>
+                        
+                        <div class="flex flex-col items-center w-full pt-2">
+                            <button id="btnPost" onclick="startAssessment('Post')" class="w-full btn-disabled px-4 py-3 sm:py-4 rounded-xl shadow-sm flex justify-center items-center gap-2 text-sm tracking-wide">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+                                Post-Assessment
+                            </button>
+                            <div id="badgePost" class="hidden w-full px-4 py-3 sm:py-4 rounded-xl text-center font-bold shadow-sm text-sm tracking-wide"></div>
+                            <p id="postHelperText" class="text-xs text-brandSecondary dark:text-gray-400 mt-3 sm:mt-4 text-center font-medium">Unlocks 10 minutes after Pre-Assessment.</p>
+                        </div>
                     </div>
+                </div>
+
+                <div id="classEmptyState" class="hidden text-center py-12 sm:py-16 bg-brandSurface dark:bg-gray-800 rounded-2xl border border-brandBorder dark:border-gray-700 shadow-sm">
+                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gray-50 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                        <svg class="w-6 h-6 sm:w-8 sm:h-8 text-gray-300 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <p class="text-base sm:text-lg font-bold text-brandPrimary dark:text-white mb-1.5 sm:mb-2">No Active Class Today</p>
+                    <p class="text-xs sm:text-sm text-brandSecondary dark:text-gray-400">Classes will appear here on your scheduled day.</p>
+                </div>
+                
+                <div class="text-center mt-6 sm:mt-8">
+                    <button onclick="openOverride()" class="text-xs text-gray-400 dark:text-gray-500 hover:text-brandPrimary dark:hover:text-white underline decoration-gray-300 dark:decoration-gray-600 transition-colors">Emergency Teacher Override</button>
                 </div>
             </div>
 
-            <div id="classEmptyState" class="hidden text-center py-12 sm:py-16 bg-brandSurface dark:bg-gray-800 rounded-2xl border border-brandBorder dark:border-gray-700 shadow-sm">
-                <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gray-50 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                    <svg class="w-6 h-6 sm:w-8 sm:h-8 text-gray-300 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                </div>
-                <p class="text-base sm:text-lg font-bold text-brandPrimary dark:text-white mb-1.5 sm:mb-2">No Active Class Today</p>
-                <p class="text-xs sm:text-sm text-brandSecondary dark:text-gray-400">Classes will appear here on your scheduled day.</p>
-            </div>
-            
-            <div class="text-center mt-6 sm:mt-8">
-                <button onclick="openOverride()" class="text-xs text-gray-400 dark:text-gray-500 hover:text-brandPrimary dark:hover:text-white underline decoration-gray-300 dark:decoration-gray-600 transition-colors">Emergency Teacher Override</button>
-            </div>
-        </div>
+        </div> <!-- END OF GRID WRAPPER -->
     </div>
 
     <!-- SCORE BREAKDOWN TAB -->
@@ -340,15 +349,38 @@
             }
         });
 
+        // NEW Sliding Tab Logic
         function switchTab(tabId) {
-            document.getElementById('view-dashboard').style.display = tabId === 'dashboard' ? 'block' : 'none';
-            document.getElementById('view-class').style.display = tabId === 'class' ? 'block' : 'none';
+            const dashboardView = document.getElementById('view-dashboard');
+            const classView = document.getElementById('view-class');
+            const tabHighlight = document.getElementById('tab-highlight');
             
-            const activeClass = "py-2.5 sm:px-5 sm:py-2 text-sm font-semibold sm:rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm transition-all text-center";
-            const inactiveClass = "py-2.5 sm:px-5 sm:py-2 text-sm font-semibold sm:rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all text-center";
-            
-            document.getElementById('tab-dashboard').className = tabId === 'dashboard' ? activeClass : inactiveClass;
-            document.getElementById('tab-class').className = tabId === 'class' ? activeClass : inactiveClass;
+            const activeBtnClass = "relative z-10 flex-1 py-2 text-sm font-semibold text-gray-900 dark:text-white transition-colors duration-300 text-center";
+            const inactiveBtnClass = "relative z-10 flex-1 py-2 text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-300 text-center";
+
+            // Base Tailwind classes for the sliding views
+            const dashBase = "col-start-1 row-start-1 w-full transition-all duration-500 ease-in-out transform space-y-4 sm:space-y-6";
+            const classBase = "col-start-1 row-start-1 w-full transition-all duration-500 ease-in-out transform space-y-6 pb-20";
+
+            if (tabId === 'dashboard') {
+                // Slide Pill to Left
+                tabHighlight.style.transform = 'translateX(0)';
+                document.getElementById('tab-dashboard').className = activeBtnClass;
+                document.getElementById('tab-class').className = inactiveBtnClass;
+
+                // Bring Dashboard in from left, push Class out to right
+                dashboardView.className = dashBase + " translate-x-0 opacity-100 z-10 pointer-events-auto";
+                classView.className = classBase + " translate-x-full opacity-0 z-0 pointer-events-none";
+            } else {
+                // Slide Pill to Right
+                tabHighlight.style.transform = 'translateX(100%)';
+                document.getElementById('tab-dashboard').className = inactiveBtnClass;
+                document.getElementById('tab-class').className = activeBtnClass;
+
+                // Push Dashboard out to left, bring Class in from right
+                dashboardView.className = dashBase + " -translate-x-full opacity-0 z-0 pointer-events-none";
+                classView.className = classBase + " translate-x-0 opacity-100 z-10 pointer-events-auto";
+            }
         }
 
         function fadeOut(elementId, callback) {
@@ -430,7 +462,7 @@
 
                 fadeOut('loginSection', () => { 
                     fadeInSwoop('appSection'); 
-                    switchTab('dashboard'); 
+                    switchTab('dashboard'); // Ensures sliders reset properly
                 });
             } else {
                 const errorDiv = document.getElementById('loginError');

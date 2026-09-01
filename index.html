@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Preface | Student Portal</title>
     
+    <!-- Dynamic Favicon (Swaps between Grey/White in JS) -->
+    <link id="favicon" rel="icon" type="image/png" href="https://github.com/17laun1-sunny/preface-student-portal/blob/main/P%20Logo_Grey.png?raw=true">
+    
     <!-- Tailwind Script config for Dark Mode -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -81,7 +84,11 @@
     <!-- LOGIN -->
     <div id="loginSection" class="w-full max-w-sm mt-8 sm:mt-12 transition-opacity duration-300 opacity-100">
         <div class="text-center mb-8 sm:mb-10">
-            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-widest text-brandPrimary dark:text-white mb-2">PREFACE</h1>
+            <!-- Light Mode Logo -->
+            <img src="https://github.com/17laun1-sunny/preface-student-portal/blob/main/Preface%20Logo_Grey.png?raw=true" alt="Preface Logo" class="block dark:hidden h-12 sm:h-16 mx-auto mb-2 sm:mb-4 object-contain">
+            <!-- Dark Mode Logo -->
+            <img src="https://github.com/17laun1-sunny/preface-student-portal/blob/main/Preface%20Logo_Whitepng.png?raw=true" alt="Preface Logo" class="hidden dark:block h-12 sm:h-16 mx-auto mb-2 sm:mb-4 object-contain">
+            
             <p class="text-brandSecondary dark:text-gray-400 text-sm">Assessment Portal</p>
         </div>
         <div class="bg-brandSurface dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-sm border border-brandBorder dark:border-gray-700 max-h-[85vh] overflow-y-auto">
@@ -276,19 +283,30 @@
         function toggleTheme() {
             const html = document.documentElement;
             const icon = document.getElementById('themeIcon');
+            const favicon = document.getElementById('favicon');
+            
             if (html.classList.contains('dark')) {
+                // Switch to Light Mode
                 html.classList.remove('dark');
                 localStorage.setItem('theme', 'light');
                 icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />';
+                favicon.href = "https://github.com/17laun1-sunny/preface-student-portal/blob/main/P%20Logo_Grey.png?raw=true";
             } else {
+                // Switch to Dark Mode
                 html.classList.add('dark');
                 localStorage.setItem('theme', 'dark');
                 icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
+                favicon.href = "https://github.com/17laun1-sunny/preface-student-portal/blob/main/P%20Logo_White.png?raw=true";
             }
         }
         
         window.onload = () => {
-            if (localStorage.getItem('theme') === 'dark') toggleTheme();
+            if (localStorage.getItem('theme') === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.getElementById('themeIcon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
+                document.getElementById('favicon').href = "https://github.com/17laun1-sunny/preface-student-portal/blob/main/P%20Logo_White.png?raw=true";
+            }
+            
             const saved = localStorage.getItem('preface_student_creds');
             if(saved) {
                 const creds = JSON.parse(saved);

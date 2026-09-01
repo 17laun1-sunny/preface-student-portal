@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Preface | Student Portal</title>
     
-    <!-- Dynamic Favicon (Swaps between Grey/White in JS) -->
     <link id="favicon" rel="icon" type="image/png" href="https://github.com/17laun1-sunny/preface-student-portal/blob/main/P%20Logo_Grey.png?raw=true">
-    
-    <!-- Tailwind Script config for Dark Mode -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -16,8 +13,6 @@
             theme: { extend: { colors: { brandBase: '#F9F8F5', brandSurface: '#FFFFFF', brandPrimary: '#111827', brandSecondary: '#6B7280', brandSuccess: '#10B981', brandStudent: '#0284C7', brandBorder: '#E5E7EB' }, fontFamily: { sans: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'] } } }
         }
     </script>
-    
-    <!-- Canvas Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
@@ -37,7 +32,7 @@
             0% { transform: translateY(30px); opacity: 0; }
             100% { transform: translateY(0); opacity: 1; }
         }
-        .animate-swoop { animation: swoopIn 1.0s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-swoop { animation: swoopIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         
         .block-0 { background-color: #E5E7EB; cursor: default; }
         .dark .block-0 { background-color: #374151; }
@@ -57,10 +52,7 @@
         .hover-tooltip::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -4px; border-width: 4px; border-style: solid; border-color: #111827 transparent transparent transparent; }
         .dark .hover-tooltip::after { border-color: #E5E7EB transparent transparent transparent; }
         .group:hover .hover-tooltip { opacity: 1; bottom: 140%; }
-        
-        @media (hover: none) {
-            .hover-tooltip { display: none !important; }
-        }
+        @media (hover: none) { .hover-tooltip { display: none !important; } }
 
         .circular-chart { display: block; margin: 0 auto; max-width: 100%; max-height: 100%; }
         .circle-bg { fill: none; stroke: #F3F4F6; stroke-width: 2.5; }
@@ -69,26 +61,60 @@
         .dark .circle { stroke: #38BDF8; }
     </style>
 </head>
-<body class="bg-brandBase dark:bg-gray-900 text-brandPrimary dark:text-gray-100 font-sans antialiased min-h-screen flex flex-col items-center p-4 pt-8 sm:pt-10 transition-colors duration-300">
+<body class="bg-brandBase dark:bg-gray-900 text-brandPrimary dark:text-gray-100 font-sans antialiased min-h-screen flex flex-col items-center p-4 pt-8 sm:pt-10 transition-colors duration-300 relative">
 
     <div id="globalError" class="hidden opacity-0 transition-opacity duration-300 fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-6 py-3 rounded-lg shadow-md z-50 text-sm font-medium"></div>
 
-    <div class="fixed top-4 right-4 sm:top-6 sm:right-6 z-40">
-        <button onclick="toggleTheme()" class="p-2 rounded-full bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 shadow-sm border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <svg id="themeIcon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <!-- Theme Toggle (Moved to Bottom Left) -->
+    <div class="fixed bottom-6 left-6 sm:bottom-8 sm:left-8 z-40">
+        <button onclick="toggleTheme()" class="p-3 rounded-full bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            <svg id="themeIcon" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
         </button>
     </div>
 
-    <!-- LOGIN -->
-    <div id="loginSection" class="w-full max-w-sm mt-8 sm:mt-12 transition-opacity duration-300 opacity-100">
+    <!-- Back to Top Button (Bottom Right) -->
+    <button id="backToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="hidden opacity-0 fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40 p-3 rounded-full bg-brandPrimary dark:bg-white text-white dark:text-brandPrimary shadow-lg hover:scale-105 transition-all duration-300">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path></svg>
+    </button>
+
+    <!-- SKELETON LOADER (Replaces Spinning Loaders) -->
+    <div id="skeletonLoader" class="hidden w-full max-w-2xl mt-2 sm:mt-4 animate-pulse">
+        <!-- Skeleton Header -->
+        <div class="flex justify-between items-center mb-6 sm:mb-8 px-1">
+            <div class="h-8 bg-gray-200 dark:bg-gray-700 rounded-md w-48 sm:w-64"></div>
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-16"></div>
+        </div>
+        <!-- Skeleton Pill -->
+        <div class="h-12 bg-gray-200 dark:bg-gray-700 rounded-xl w-full sm:max-w-sm mb-6 sm:mb-8"></div>
+        <!-- Skeleton Score Card -->
+        <div class="bg-brandSurface dark:bg-gray-800 rounded-2xl border border-brandBorder dark:border-gray-700 shadow-sm p-5 sm:p-8 flex items-center justify-between gap-6 mb-4 sm:mb-6">
+             <div class="space-y-4 w-1/2">
+                  <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-32"></div>
+                  <div class="h-12 bg-gray-200 dark:bg-gray-700 rounded w-20"></div>
+                  <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded w-40"></div>
+             </div>
+             <div class="w-24 h-24 sm:w-28 sm:h-28 bg-gray-200 dark:bg-gray-700 rounded-full flex-shrink-0"></div>
+        </div>
+        <!-- Skeleton Heatmap -->
+        <div class="bg-brandSurface dark:bg-gray-800 p-5 sm:p-8 rounded-2xl shadow-sm border border-brandBorder dark:border-gray-700 mb-6 h-32">
+             <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded w-32 mb-4"></div>
+             <div class="h-12 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+        </div>
+        <!-- Skeleton List -->
+        <div class="space-y-3">
+             <div class="h-16 bg-brandSurface dark:bg-gray-800 border border-brandBorder dark:border-gray-700 rounded-xl"></div>
+             <div class="h-16 bg-brandSurface dark:bg-gray-800 border border-brandBorder dark:border-gray-700 rounded-xl"></div>
+             <div class="h-16 bg-brandSurface dark:bg-gray-800 border border-brandBorder dark:border-gray-700 rounded-xl"></div>
+        </div>
+    </div>
+
+    <!-- LOGIN SECTION -->
+    <div id="loginSection" class="hidden w-full max-w-sm mt-8 sm:mt-12 transition-opacity duration-300 opacity-100">
         <div class="text-center mb-8 sm:mb-10">
-            <!-- Light Mode Logo -->
             <img src="https://github.com/17laun1-sunny/preface-student-portal/blob/main/Preface%20Logo_Grey.png?raw=true" alt="Preface Logo" class="block dark:hidden h-12 sm:h-16 mx-auto mb-2 sm:mb-4 object-contain">
-            <!-- Dark Mode Logo -->
             <img src="https://github.com/17laun1-sunny/preface-student-portal/blob/main/Preface%20Logo_Whitepng.png?raw=true" alt="Preface Logo" class="hidden dark:block h-12 sm:h-16 mx-auto mb-2 sm:mb-4 object-contain">
-            
             <p class="text-brandSecondary dark:text-gray-400 text-sm">Assessment Portal</p>
         </div>
         <div class="bg-brandSurface dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-sm border border-brandBorder dark:border-gray-700 max-h-[85vh] overflow-y-auto">
@@ -102,9 +128,8 @@
                     <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">Student ID</label>
                     <input type="text" id="studentId" onkeypress="if(event.key === 'Enter') handleLogin()" class="w-full bg-brandBase dark:bg-gray-900 border border-brandBorder dark:border-gray-700 rounded-lg px-4 py-3 text-brandPrimary dark:text-white input-ring transition-colors" placeholder="Enter your ID">
                 </div>
-                <button onclick="handleLogin()" id="loginBtn" class="w-full btn-gradient rounded-lg py-3 mt-2 sm:mt-4 flex justify-center items-center">
-                    <span id="loginBtnText">Sign In</span>
-                    <svg id="loginSpinner" class="hidden animate-spin ml-2 h-5 w-5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <button onclick="handleLogin()" class="w-full btn-gradient rounded-lg py-3 mt-2 sm:mt-4 flex justify-center items-center">
+                    Sign In
                 </button>
             </div>
         </div>
@@ -118,20 +143,15 @@
             <button onclick="logout()" class="text-sm text-brandSecondary dark:text-gray-400 hover:text-brandPrimary dark:hover:text-white font-medium transition-colors whitespace-nowrap">Log out</button>
         </div>
 
-        <!-- NEW Pill Navigation Switch with Smooth Slide -->
         <div class="relative flex p-1 bg-gray-100 dark:bg-gray-800 rounded-xl w-full sm:max-w-sm mb-6 sm:mb-8 border border-gray-200 dark:border-gray-700 overflow-hidden">
-            <!-- The sliding background block -->
             <div id="tab-highlight" class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-white dark:bg-gray-700 rounded-lg shadow-sm transition-transform duration-300 ease-out transform translate-x-0"></div>
-            
             <button onclick="switchTab('dashboard')" id="tab-dashboard" class="relative z-10 flex-1 py-2 text-sm font-semibold text-gray-900 dark:text-white transition-colors duration-300 text-center">My Dashboard</button>
             <button onclick="switchTab('class')" id="tab-class" class="relative z-10 flex-1 py-2 text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-300 text-center">Today's Class</button>
         </div>
 
-        <!-- STACKED GRID WRAPPER For Smooth Content Sliding -->
         <div class="grid w-full overflow-hidden">
-            
             <!-- TAB 1: DASHBOARD -->
-            <div id="view-dashboard" class="col-start-1 row-start-1 w-full transition-all duration-500 ease-in-out transform translate-x-0 opacity-100 z-10 pointer-events-auto space-y-4 sm:space-y-6">
+            <div id="view-dashboard" class="col-start-1 row-start-1 w-full transition-all duration-500 ease-in-out transform translate-x-0 opacity-100 z-10 pointer-events-auto space-y-4 sm:space-y-6 pb-20">
                 
                 <div class="bg-brandSurface dark:bg-gray-800 rounded-2xl border border-brandBorder dark:border-gray-700 shadow-sm p-5 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
                    <div class="text-center sm:text-left order-2 sm:order-1">
@@ -164,7 +184,7 @@
                     </div>
                 </div>
 
-                <div class="pt-2 sm:pt-4 pb-12">
+                <div class="pt-2 sm:pt-4">
                     <h3 class="font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-1 text-sm sm:text-base">Score Record</h3>
                     <div id="historyListContainer" class="space-y-2 sm:space-y-3">
                         <!-- History injected via JS -->
@@ -209,16 +229,21 @@
                     <button onclick="openOverride()" class="text-xs text-gray-400 dark:text-gray-500 hover:text-brandPrimary dark:hover:text-white underline decoration-gray-300 dark:decoration-gray-600 transition-colors">Emergency Teacher Override</button>
                 </div>
             </div>
-
-        </div> <!-- END OF GRID WRAPPER -->
+        </div> 
     </div>
 
-    <!-- SCORE BREAKDOWN TAB -->
+    <!-- SCORE BREAKDOWN BOTTOM SHEET / SIDE TAB -->
     <div id="scoreTabOverlay" onclick="closeScoreTab()" class="hidden fixed inset-0 z-40 bg-brandPrimary bg-opacity-40 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
     
-    <div id="scoreTab" class="fixed top-0 right-0 h-full w-full sm:max-w-sm bg-brandSurface dark:bg-gray-800 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col sm:border-l border-brandBorder dark:border-gray-700">
+    <div id="scoreTab" class="fixed z-50 bg-brandSurface dark:bg-gray-800 shadow-2xl flex flex-col sm:border-l border-brandBorder dark:border-gray-700
+        bottom-0 left-0 w-full h-[55vh] rounded-t-3xl sm:rounded-none sm:top-0 sm:right-0 sm:w-96 sm:h-full
+        transform transition-transform duration-300 translate-y-full sm:translate-y-0 sm:translate-x-full">
+        
         <div class="p-6 sm:p-8 flex-grow overflow-y-auto relative">
-            <button onclick="closeScoreTab()" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full text-gray-400 hover:text-brandPrimary dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+            
+            <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-4 sm:hidden"></div>
+
+            <button onclick="closeScoreTab()" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full text-gray-400 hover:text-brandPrimary dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors hidden sm:block">
                 <svg class="w-6 h-6 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
             <h2 class="text-xl sm:text-2xl font-bold mb-1 dark:text-white mt-2 sm:mt-0" id="scoreModalTitle">Score Breakdown</h2>
@@ -242,8 +267,9 @@
                     <span class="text-xl font-extrabold text-brandPrimary dark:text-white" id="breakdownTotal">5 pts</span>
                 </div>
             </div>
+            
             <div class="mt-8 text-center sm:hidden">
-                <button onclick="closeScoreTab()" class="text-sm font-bold text-brandStudent">Swipe or Tap to Close</button>
+                <button onclick="closeScoreTab()" class="text-xs font-bold text-gray-400">Swipe down or tap to close</button>
             </div>
         </div>
     </div>
@@ -282,7 +308,6 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE:
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwSbw1R0RjVy3wohvMauHE12wggRJ-LkN-d4wZDFcIuAxpPfsI8wWi2TbE6c-pFLmy__w/exec";
 
         let currentUser = null;
@@ -295,13 +320,11 @@
             const favicon = document.getElementById('favicon');
             
             if (html.classList.contains('dark')) {
-                // Switch to Light Mode
                 html.classList.remove('dark');
                 localStorage.setItem('theme', 'light');
                 icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />';
                 favicon.href = "https://github.com/17laun1-sunny/preface-student-portal/blob/main/P%20Logo_Grey.png?raw=true";
             } else {
-                // Switch to Dark Mode
                 html.classList.add('dark');
                 localStorage.setItem('theme', 'dark');
                 icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
@@ -318,12 +341,36 @@
             
             const saved = localStorage.getItem('preface_student_creds');
             if(saved) {
+                // Instantly show the skeleton loader shell on auto-login
+                document.getElementById('skeletonLoader').classList.remove('hidden');
                 const creds = JSON.parse(saved);
                 document.getElementById('lastName').value = creds.last_name;
                 document.getElementById('studentId').value = creds.student_id;
-                handleLogin();
+                
+                fetch(`${GAS_API_URL}?action=login&lastName=${encodeURIComponent(creds.last_name)}&studentId=${encodeURIComponent(creds.student_id)}`)
+                    .then(res => res.json())
+                    .then(onLoginSuccess)
+                    .catch(err => {
+                        document.getElementById('skeletonLoader').classList.add('hidden');
+                        document.getElementById('loginSection').classList.remove('hidden');
+                        onSystemError(err);
+                    });
+            } else {
+                document.getElementById('loginSection').classList.remove('hidden');
             }
         };
+
+        // Scroll to Top Logic
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('backToTopBtn');
+            if (window.scrollY > 250) {
+                btn.classList.remove('hidden');
+                setTimeout(() => btn.classList.remove('opacity-0'), 10);
+            } else {
+                btn.classList.add('opacity-0');
+                setTimeout(() => btn.classList.add('hidden'), 300);
+            }
+        }, {passive: true});
 
         document.addEventListener("visibilitychange", () => {
             if (document.visibilityState === 'visible' && currentUser) {
@@ -349,7 +396,6 @@
             }
         });
 
-        // NEW Sliding Tab Logic
         function switchTab(tabId) {
             const dashboardView = document.getElementById('view-dashboard');
             const classView = document.getElementById('view-class');
@@ -358,26 +404,21 @@
             const activeBtnClass = "relative z-10 flex-1 py-2 text-sm font-semibold text-gray-900 dark:text-white transition-colors duration-300 text-center";
             const inactiveBtnClass = "relative z-10 flex-1 py-2 text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-300 text-center";
 
-            // Base Tailwind classes for the sliding views
-            const dashBase = "col-start-1 row-start-1 w-full transition-all duration-500 ease-in-out transform space-y-4 sm:space-y-6";
+            const dashBase = "col-start-1 row-start-1 w-full transition-all duration-500 ease-in-out transform space-y-4 sm:space-y-6 pb-20";
             const classBase = "col-start-1 row-start-1 w-full transition-all duration-500 ease-in-out transform space-y-6 pb-20";
 
             if (tabId === 'dashboard') {
-                // Slide Pill to Left
                 tabHighlight.style.transform = 'translateX(0)';
                 document.getElementById('tab-dashboard').className = activeBtnClass;
                 document.getElementById('tab-class').className = inactiveBtnClass;
 
-                // Bring Dashboard in from left, push Class out to right
                 dashboardView.className = dashBase + " translate-x-0 opacity-100 z-10 pointer-events-auto";
                 classView.className = classBase + " translate-x-full opacity-0 z-0 pointer-events-none";
             } else {
-                // Slide Pill to Right
                 tabHighlight.style.transform = 'translateX(100%)';
                 document.getElementById('tab-dashboard').className = inactiveBtnClass;
                 document.getElementById('tab-class').className = activeBtnClass;
 
-                // Push Dashboard out to left, bring Class in from right
                 dashboardView.className = dashBase + " -translate-x-full opacity-0 z-0 pointer-events-none";
                 classView.className = classBase + " translate-x-0 opacity-100 z-10 pointer-events-auto";
             }
@@ -423,8 +464,10 @@
             sessionStorage.setItem('last_login_time', now);
 
             errorDiv.classList.add('hidden');
-            document.getElementById('loginBtnText').innerText = "Verifying...";
-            document.getElementById('loginSpinner').classList.remove('hidden');
+            
+            // Manual login uses the skeleton loader instead of button spinners now!
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('skeletonLoader').classList.remove('hidden');
 
             fetch(`${GAS_API_URL}?action=login&lastName=${encodeURIComponent(lastName)}&studentId=${encodeURIComponent(studentId)}`)
                 .then(res => res.json())
@@ -433,9 +476,6 @@
         }
 
         function onLoginSuccess(response) {
-            document.getElementById('loginBtnText').innerText = "Sign In";
-            document.getElementById('loginSpinner').classList.add('hidden');
-
             if(response.success) {
                 currentUser = response.user;
                 currentClass = response.active_class;
@@ -460,14 +500,16 @@
                     document.getElementById('classEmptyState').classList.remove('hidden');
                 }
 
-                fadeOut('loginSection', () => { 
-                    fadeInSwoop('appSection'); 
-                    switchTab('dashboard'); // Ensures sliders reset properly
-                });
+                // Hide skeleton, show actual app
+                document.getElementById('skeletonLoader').classList.add('hidden');
+                fadeInSwoop('appSection'); 
+                switchTab('dashboard'); 
             } else {
+                document.getElementById('skeletonLoader').classList.add('hidden');
                 const errorDiv = document.getElementById('loginError');
                 errorDiv.innerText = response.message;
                 errorDiv.classList.remove('hidden');
+                document.getElementById('loginSection').classList.remove('hidden');
                 localStorage.removeItem('preface_student_creds');
             }
         }
@@ -483,12 +525,17 @@
             grid.innerHTML = '';
             list.innerHTML = '';
             
+            // Ensure classes are sorted Newest at the top (Descending Date)
+            dashboard.history.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // Heatmap logic: Populates backwards to ensure oldest blocks start at top-left
             for(let i = 0; i < 40; i++) { 
                 const block = document.createElement('div');
                 block.className = 'w-4 h-4 sm:w-5 sm:h-5 rounded-[2px] sm:rounded-[3px] relative group';
                 
-                if(i < dashboard.history.length) {
-                    const cls = dashboard.history[dashboard.history.length - 1 - i]; 
+                const index = dashboard.history.length - 1 - i; // Gets the oldest first
+                if(index >= 0 && index < dashboard.history.length) {
+                    const cls = dashboard.history[index]; 
                     const pts = cls.points;
                     
                     if(pts === 5) block.classList.add('block-3');
@@ -500,7 +547,7 @@
 
                     const tooltip = document.createElement('div');
                     tooltip.className = 'hover-tooltip';
-                    tooltip.innerHTML = `<span class="font-bold tracking-wide">${cls.course_name} (L${cls.session})</span><br><span class="opacity-75 font-normal">${cls.date} &middot; <span class="text-white">${pts} pts</span></span>`;
+                    tooltip.innerHTML = `<span class="font-bold tracking-wide">${cls.course_name} (L${cls.session})</span><br><span class="text-green-400 font-bold tracking-wide">${pts} pts</span>`;
                     block.appendChild(tooltip);
                     
                 } else {
@@ -509,6 +556,7 @@
                 grid.appendChild(block);
             }
 
+            // History List Builder
             dashboard.history.forEach(cls => {
                 const listItem = document.createElement('div');
                 listItem.className = 'flex items-center justify-between p-3 sm:p-4 bg-white dark:bg-gray-800 border border-brandBorder dark:border-gray-700 rounded-xl shadow-sm hover:border-gray-300 dark:hover:border-gray-500 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-md cursor-pointer';
@@ -519,7 +567,7 @@
                         <div class="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-50 dark:bg-gray-700 flex items-center justify-center text-brandStudent dark:text-gray-300 font-bold text-xs sm:text-sm border border-blue-100 dark:border-gray-600">${cls.course_name}</div>
                         <div class="truncate">
                             <h4 class="font-bold text-gray-900 dark:text-white leading-tight text-sm sm:text-base truncate">${cls.course_name}</h4>
-                            <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mt-0.5 font-medium truncate">Session ${cls.session}</p>
+                            <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mt-0.5 font-medium truncate">${cls.date} &middot; Session ${cls.session}</p>
                         </div>
                     </div>
                     <div class="text-right flex-shrink-0">
@@ -529,8 +577,16 @@
                 list.appendChild(listItem);
             });
             
+            // Guided Empty State for brand new students!
             if(dashboard.history.length === 0) {
-                list.innerHTML = `<p class="text-sm text-brandSecondary dark:text-gray-400 py-4 text-center">No assessments completed yet.</p>`;
+                list.innerHTML = `
+                    <div class="text-center py-10 px-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-dashed border-gray-300 dark:border-gray-600">
+                        <div class="text-4xl mb-3">🚀</div>
+                        <h4 class="font-bold text-gray-900 dark:text-white mb-1">Ready to start?</h4>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-5">Complete your first assessment to earn points!</p>
+                        <button onclick="switchTab('class')" class="btn-gradient px-4 py-2.5 rounded-lg text-sm font-semibold shadow-sm inline-block">Go to Today's Class</button>
+                    </div>
+                `;
             }
         }
 
@@ -564,7 +620,8 @@
             overlay.classList.remove('opacity-0'); overlay.classList.add('opacity-100');
             
             const tab = document.getElementById('scoreTab');
-            tab.classList.remove('translate-x-full'); tab.classList.add('translate-x-0');
+            tab.classList.remove('translate-y-full', 'sm:translate-x-full');
+            tab.classList.add('translate-y-0', 'sm:translate-x-0');
 
             if (cls.points === 5) {
                 confetti({
@@ -579,12 +636,21 @@
 
         function closeScoreTab() {
             const tab = document.getElementById('scoreTab');
-            tab.classList.remove('translate-x-0'); tab.classList.add('translate-x-full');
+            tab.classList.remove('translate-y-0', 'sm:translate-x-0');
+            tab.classList.add('translate-y-full', 'sm:translate-x-full');
             
             const overlay = document.getElementById('scoreTabOverlay');
             overlay.classList.remove('opacity-100'); overlay.classList.add('opacity-0');
             setTimeout(() => { overlay.classList.add('hidden'); }, 300);
         }
+
+        // Swipe Down logic for Mobile Bottom Sheet
+        let touchStartY = 0;
+        const scoreTabEl = document.getElementById('scoreTab');
+        scoreTabEl.addEventListener('touchstart', e => { touchStartY = e.changedTouches[0].screenY; }, {passive: true});
+        scoreTabEl.addEventListener('touchend', e => {
+            if (e.changedTouches[0].screenY - touchStartY > 60) closeScoreTab();
+        }, {passive: true});
 
         function evaluateLocksAndBadges() {
             if(!currentClass) return;
@@ -732,17 +798,17 @@
                 document.getElementById('lastName').value = '';
                 document.getElementById('studentId').value = '';
                 
-                const loginSection = document.getElementById('loginSection');
-                loginSection.classList.remove('hidden');
-                void loginSection.offsetWidth;
-                loginSection.classList.remove('opacity-0'); loginSection.classList.add('opacity-100');
+                document.getElementById('loginSection').classList.remove('hidden');
+                void document.getElementById('loginSection').offsetWidth;
+                document.getElementById('loginSection').classList.remove('opacity-0'); 
+                document.getElementById('loginSection').classList.add('opacity-100');
             });
         }
 
         function onSystemError(error) { 
             showGlobalError("System Error: " + error.message);
-            document.getElementById('loginBtnText').innerText = "Sign In"; 
-            document.getElementById('loginSpinner').classList.add('hidden');
+            document.getElementById('skeletonLoader').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
         }
     </script>
 </body>

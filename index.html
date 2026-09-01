@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Preface | Student Portal</title>
+    
+    <!-- Tailwind Script config for Dark Mode -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { brandBase: '#F9F8F5', brandSurface: '#FFFFFF', brandPrimary: '#111827', brandSecondary: '#6B7280', brandSuccess: '#10B981', brandStudent: '#0284C7', brandBorder: '#E5E7EB' }, fontFamily: { sans: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'] } } }
+        }
+    </script>
+    
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body { transition: background-color 0.3s ease, color 0.3s ease; overflow-x: hidden; }
+        
+        .btn-gradient { background: #111827; color: #FFFFFF; font-weight: 600; transition: all 0.2s ease; }
+        .btn-gradient:hover { background: #1F2937; transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .dark .btn-gradient { background: #E5E7EB; color: #111827; }
+        .dark .btn-gradient:hover { background: #FFFFFF; }
+        
+        .btn-disabled { background: #F3F4F6; color: #9CA3AF; font-weight: 600; cursor: not-allowed; }
+        .dark .btn-disabled { background: #374151; color: #6B7280; }
+        
+        .input-ring:focus { outline: none; box-shadow: 0 0 0 2px #0284C7; border-color: #0284C7; }
+
+        @keyframes swoopIn {
+            0% { transform: translateY(30px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        .animate-swoop { animation: swoopIn 1.0s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        .block-0 { background-color: #E5E7EB; cursor: default; }
+        .dark .block-0 { background-color: #374151; }
+        .block-1 { background-color: #BAE6FD; cursor: pointer; transition: transform 0.1s ease; }
+        .dark .block-1 { background-color: #0369A1; }
+        .block-2 { background-color: #38BDF8; cursor: pointer; transition: transform 0.1s ease; }
+        .dark .block-2 { background-color: #0284C7; }
+        .block-3 { background-color: #0284C7; cursor: pointer; transition: transform 0.1s ease; } 
+        .dark .block-3 { background-color: #38BDF8; }
+        
+        @media (min-width: 640px) {
+            .block-1:hover, .block-2:hover, .block-3:hover { transform: scale(1.2) translateY(-1px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2); z-index: 10;}
+        }
+
+        .hover-tooltip { position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%); background-color: #111827; color: #FFFFFF; font-size: 0.75rem; padding: 6px 12px; border-radius: 6px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.2s ease, bottom 0.2s ease; z-index: 50; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .dark .hover-tooltip { background-color: #E5E7EB; color: #111827; }
+        .hover-tooltip::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -4px; border-width: 4px; border-style: solid; border-color: #111827 transparent transparent transparent; }
+        .dark .hover-tooltip::after { border-color: #E5E7EB transparent transparent transparent; }
+        .group:hover .hover-tooltip { opacity: 1; bottom: 140%; }
+        
+        @media (hover: none) {
+            .hover-tooltip { display: none !important; }
+        }
+
+        .circular-chart { display: block; margin: 0 auto; max-width: 100%; max-height: 100%; }
+        .circle-bg { fill: none; stroke: #F3F4F6; stroke-width: 2.5; }
+        .dark .circle-bg { stroke: #374151; }
+        .circle { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke: #0284C7; transition: stroke-dasharray 1s ease-out; }
+        .dark .circle { stroke: #38BDF8; }
+    </style>
+</head>
+<body class="bg-brandBase dark:bg-gray-900 text-brandPrimary dark:text-gray-100 font-sans antialiased min-h-screen flex flex-col items-center p-4 pt-8 sm:pt-10 transition-colors duration-300">
+
+    <div id="globalError" class="hidden opacity-0 transition-opacity duration-300 fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-6 py-3 rounded-lg shadow-md z-50 text-sm font-medium"></div>
+
+    <div class="fixed top-4 right-4 sm:top-6 sm:right-6 z-40">
+        <button onclick="toggleTheme()" class="p-2 rounded-full bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 shadow-sm border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            <svg id="themeIcon" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="loginSection" class="w-full max-w-sm mt-8 sm:mt-12 transition-opacity duration-300 opacity-100">
+        <div class="text-center mb-8 sm:mb-10">
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-widest text-brandPrimary dark:text-white mb-2">PREFACE</h1>
+            <p class="text-brandSecondary dark:text-gray-400 text-sm">Assessment Portal</p>
+        </div>
+        <div class="bg-brandSurface dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-sm border border-brandBorder dark:border-gray-700 max-h-[85vh] overflow-y-auto">
+            <div id="loginError" class="hidden text-red-500 text-sm mb-4 text-center transition-opacity duration-300"></div>
+            <div class="space-y-4 sm:space-y-5">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">Last Name</label>
+                    <input type="text" id="lastName" onkeypress="if(event.key === 'Enter') handleLogin()" class="w-full bg-brandBase dark:bg-gray-900 border border-brandBorder dark:border-gray-700 rounded-lg px-4 py-3 text-brandPrimary dark:text-white input-ring transition-colors" placeholder="e.g. Chen">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1.5">Student ID</label>
+                    <input type="text" id="studentId" onkeypress="if(event.key === 'Enter') handleLogin()" class="w-full bg-brandBase dark:bg-gray-900 border border-brandBorder dark:border-gray-700 rounded-lg px-4 py-3 text-brandPrimary dark:text-white input-ring transition-colors" placeholder="Enter your ID">
+                </div>
+                <button onclick="handleLogin()" id="loginBtn" class="w-full btn-gradient rounded-lg py-3 mt-2 sm:mt-4 flex justify-center items-center">
+                    <span id="loginBtnText">Sign In</span>
+                    <svg id="loginSpinner" class="hidden animate-spin ml-2 h-5 w-5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP SHELL -->
+    <div id="appSection" class="hidden opacity-0 w-full max-w-2xl mt-2 sm:mt-4">
+        
+        <div class="flex justify-between items-center mb-6 sm:mb-8 px-1 sm:px-0">
+            <h1 class="text-xl sm:text-2xl font-bold text-brandPrimary dark:text-white truncate pr-2">Welcome, <span id="studentNameDisplay"></span></h1>
+            <button onclick="logout()" class="text-sm text-brandSecondary dark:text-gray-400 hover:text-brandPrimary dark:hover:text-white font-medium transition-colors whitespace-nowrap">Log out</button>
+        </div>
+
+        <div class="grid grid-cols-2 sm:flex sm:p-1 sm:space-x-1 bg-gray-100 dark:bg-gray-800 rounded-xl w-full sm:max-w-fit mb-6 sm:mb-8 border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="py-2.5 sm:px-5 sm:py-2 text-sm font-semibold sm:rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm transition-all text-center">My Dashboard</button>
+            <button onclick="switchTab('class')" id="tab-class" class="py-2.5 sm:px-5 sm:py-2 text-sm font-semibold sm:rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all text-center">Today's Class</button>
+        </div>
+
+        <!-- TAB 1: DASHBOARD -->
+        <div id="view-dashboard" class="space-y-4 sm:space-y-6 block">
+            
+            <div class="bg-brandSurface dark:bg-gray-800 rounded-2xl border border-brandBorder dark:border-gray-700 shadow-sm p-5 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
+               <div class="text-center sm:text-left order-2 sm:order-1">
+                   <h2 class="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Total Preface Points</h2>
+                   <div class="text-5xl sm:text-6xl font-extrabold text-brandPrimary dark:text-white mt-1 mb-1 tracking-tight" id="scoreText">0</div>
+                   <p class="text-sm text-brandSecondary dark:text-gray-400 font-medium">Out of <span id="maxScoreDisplay" class="text-gray-700 dark:text-gray-300">200</span> possible points</p>
+               </div>
+               <div class="w-24 h-24 sm:w-28 sm:h-28 relative flex-shrink-0 order-1 sm:order-2">
+                   <svg viewBox="0 0 36 36" class="circular-chart">
+                       <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                       <path id="scoreCircle" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                   </svg>
+               </div>
+            </div>
+
+            <div class="bg-brandSurface dark:bg-gray-800 p-5 sm:p-8 rounded-2xl shadow-sm border border-brandBorder dark:border-gray-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6">
+                <div class="flex-shrink-0 w-full sm:w-auto flex flex-row sm:flex-col justify-between items-center sm:items-start">
+                    <h3 class="font-bold text-gray-900 dark:text-white text-sm sm:text-base">Class Heatmap</h3>
+                    <div class="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium sm:mt-1.5">
+                        <span>Less</span>
+                        <div class="w-3 h-3 sm:w-4 sm:h-4 rounded-[2px] sm:rounded-sm block-0"></div>
+                        <div class="w-3 h-3 sm:w-4 sm:h-4 rounded-[2px] sm:rounded-sm block-1"></div>
+                        <div class="w-3 h-3 sm:w-4 sm:h-4 rounded-[2px] sm:rounded-sm block-2"></div>
+                        <div class="w-3 h-3 sm:w-4 sm:h-4 rounded-[2px] sm:rounded-sm block-3"></div>
+                        <span>More</span>
+                    </div>
+                </div>
+                <div id="heatmapGrid" class="grid grid-cols-10 gap-1 sm:gap-1.5 w-auto">
+                    <!-- Heatmap injected via JS -->
+                </div>
+            </div>
+
+            <div class="pt-2 sm:pt-4 pb-12">
+                <h3 class="font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-1 text-sm sm:text-base">Score Record</h3>
+                <div id="historyListContainer" class="space-y-2 sm:space-y-3">
+                    <!-- History injected via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: TODAY'S CLASS -->
+        <div id="view-class" class="hidden space-y-6 pb-20">
+            <div id="classActiveState" class="hidden bg-brandSurface dark:bg-gray-800 p-6 sm:p-12 rounded-2xl shadow-sm border border-brandBorder dark:border-gray-700">
+                <div class="text-center mb-8 sm:mb-10 border-b border-gray-100 dark:border-gray-700 pb-6 sm:pb-8">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-brandPrimary dark:text-white" id="courseNameDisplay">Course</h2>
+                    <p class="text-brandSecondary dark:text-gray-400 mt-1 sm:mt-2 font-medium">Session <span id="sessionDisplay"></span></p>
+                </div>
+                
+                <div class="space-y-4 max-w-sm mx-auto">
+                    <div class="flex flex-col items-center w-full">
+                        <button id="btnPre" onclick="startAssessment('Pre')" class="w-full btn-gradient px-4 py-3 sm:py-4 rounded-xl shadow-sm flex justify-center items-center font-bold text-sm tracking-wide">Start Pre-Assessment</button>
+                        <div id="badgePre" class="hidden w-full px-4 py-3 sm:py-4 rounded-xl text-center font-bold shadow-sm text-sm tracking-wide"></div>
+                    </div>
+                    
+                    <div class="flex flex-col items-center w-full pt-2">
+                        <button id="btnPost" onclick="startAssessment('Post')" class="w-full btn-disabled px-4 py-3 sm:py-4 rounded-xl shadow-sm flex justify-center items-center gap-2 text-sm tracking-wide">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+                            Post-Assessment
+                        </button>
+                        <div id="badgePost" class="hidden w-full px-4 py-3 sm:py-4 rounded-xl text-center font-bold shadow-sm text-sm tracking-wide"></div>
+                        <p id="postHelperText" class="text-xs text-brandSecondary dark:text-gray-400 mt-3 sm:mt-4 text-center font-medium">Unlocks 10 minutes after Pre-Assessment.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="classEmptyState" class="hidden text-center py-12 sm:py-16 bg-brandSurface dark:bg-gray-800 rounded-2xl border border-brandBorder dark:border-gray-700 shadow-sm">
+                <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gray-50 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                    <svg class="w-6 h-6 sm:w-8 sm:h-8 text-gray-300 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                </div>
+                <p class="text-base sm:text-lg font-bold text-brandPrimary dark:text-white mb-1.5 sm:mb-2">No Active Class Today</p>
+                <p class="text-xs sm:text-sm text-brandSecondary dark:text-gray-400">Classes will appear here on your scheduled day.</p>
+            </div>
+            
+            <div class="text-center mt-6 sm:mt-8">
+                <button onclick="openOverride()" class="text-xs text-gray-400 dark:text-gray-500 hover:text-brandPrimary dark:hover:text-white underline decoration-gray-300 dark:decoration-gray-600 transition-colors">Emergency Teacher Override</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCORE BREAKDOWN TAB -->
+    <div id="scoreTabOverlay" onclick="closeScoreTab()" class="hidden fixed inset-0 z-40 bg-brandPrimary bg-opacity-40 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+    
+    <div id="scoreTab" class="fixed top-0 right-0 h-full w-full sm:max-w-sm bg-brandSurface dark:bg-gray-800 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col sm:border-l border-brandBorder dark:border-gray-700">
+        <div class="p-6 sm:p-8 flex-grow overflow-y-auto relative">
+            <button onclick="closeScoreTab()" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full text-gray-400 hover:text-brandPrimary dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <svg class="w-6 h-6 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h2 class="text-xl sm:text-2xl font-bold mb-1 dark:text-white mt-2 sm:mt-0" id="scoreModalTitle">Score Breakdown</h2>
+            <p class="text-xs sm:text-sm text-brandStudent dark:text-blue-400 mb-6 sm:mb-8 font-semibold" id="scoreModalSubtitle">Course Name - Session</p>
+            
+            <div class="space-y-3 sm:space-y-4">
+                <div class="flex justify-between items-center p-3.5 sm:p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-100 dark:border-gray-600">
+                    <span class="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200">Pre-Assessment</span>
+                    <span class="text-sm font-bold text-green-600 dark:text-green-400" id="breakdownPre">+1 pt</span>
+                </div>
+                <div class="flex justify-between items-center p-3.5 sm:p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-100 dark:border-gray-600">
+                    <span class="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200">Post-Assessment</span>
+                    <span class="text-sm font-bold text-green-600 dark:text-green-400" id="breakdownPost">+1 pt</span>
+                </div>
+                <div class="flex justify-between items-center p-3.5 sm:p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-100 dark:border-gray-600">
+                    <span class="text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200">Correct Answers</span>
+                    <span class="text-sm font-bold text-brandStudent dark:text-blue-400" id="breakdownAccuracy">+3 pts</span>
+                </div>
+                <div class="flex justify-between items-center p-4 sm:p-5 mt-4 border-t border-gray-200 dark:border-gray-700">
+                    <span class="text-base sm:text-lg font-extrabold text-gray-900 dark:text-white">Total</span>
+                    <span class="text-xl font-extrabold text-brandPrimary dark:text-white" id="breakdownTotal">5 pts</span>
+                </div>
+            </div>
+            <div class="mt-8 text-center sm:hidden">
+                <button onclick="closeScoreTab()" class="text-sm font-bold text-brandStudent">Swipe or Tap to Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEACHER OVERRIDE GATE -->
+    <div id="overrideModal" class="hidden opacity-0 transition-opacity duration-300 fixed inset-0 z-50 bg-brandPrimary bg-opacity-40 backdrop-blur-sm items-center justify-center p-4">
+        <div class="bg-brandSurface dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-sm relative transform transition-transform duration-300 scale-95 max-h-[90vh] overflow-y-auto" id="overrideModalInner">
+            <button onclick="closeGate('overrideModal', 'overrideModalInner')" class="absolute top-4 right-4 text-gray-400 hover:text-brandPrimary dark:hover:text-white">✕</button>
+            <h2 class="text-lg sm:text-xl font-bold mb-1 dark:text-white">Teacher Override</h2>
+            <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-6">Authorization required.</p>
+            <div id="overrideError" class="hidden text-red-500 text-sm mb-4 text-center"></div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Happening ID</label>
+                    <input type="number" id="overrideHappeningId" class="w-full bg-brandBase dark:bg-gray-900 border border-brandBorder dark:border-gray-700 rounded-lg px-4 py-2 text-brandPrimary dark:text-white input-ring text-center tracking-widest">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Assessment</label>
+                    <select id="overrideType" class="w-full bg-brandBase dark:bg-gray-900 border border-brandBorder dark:border-gray-700 rounded-lg px-4 py-2 text-brandPrimary dark:text-white input-ring text-center">
+                        <option value="Pre">Pre-Assessment</option>
+                        <option value="Post">Post-Assessment</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Teacher ID (PIN)</label>
+                    <input type="password" id="overrideTeacherId" onkeypress="if(event.key === 'Enter') submitOverride()" class="w-full bg-brandBase dark:bg-gray-900 border border-brandBorder dark:border-gray-700 rounded-lg px-4 py-2 text-brandPrimary dark:text-white input-ring text-center tracking-widest" placeholder="••••">
+                </div>
+                <button onclick="submitOverride()" id="overrideBtn" class="w-full btn-gradient rounded-lg py-3 mt-4 flex justify-center items-center text-sm tracking-wide">
+                    <span id="overrideBtnText">Force Unlock</span>
+                    <svg id="overrideSpinner" class="hidden animate-spin ml-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE:
+        const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwSbw1R0RjVy3wohvMauHE12wggRJ-LkN-d4wZDFcIuAxpPfsI8wWi2TbE6c-pFLmy__w/exec";
+
+        let currentUser = null;
+        let currentClass = null;
+        let classHistory = [];
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />';
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
+            }
+        }
+        
+        window.onload = () => {
+            if (localStorage.getItem('theme') === 'dark') toggleTheme();
+            const saved = localStorage.getItem('preface_student_creds');
+            if(saved) {
+                const creds = JSON.parse(saved);
+                document.getElementById('lastName').value = creds.last_name;
+                document.getElementById('studentId').value = creds.student_id;
+                handleLogin();
+            }
+        };
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === 'visible' && currentUser) {
+                const now = Date.now();
+                const lastSync = parseInt(sessionStorage.getItem('last_sync_time')) || 0;
+                if (now - lastSync < 3000) return;
+                sessionStorage.setItem('last_sync_time', now);
+
+                const saved = localStorage.getItem('preface_student_creds');
+                if(!saved) return;
+                const creds = JSON.parse(saved);
+
+                fetch(`${GAS_API_URL}?action=login&lastName=${encodeURIComponent(creds.last_name)}&studentId=${encodeURIComponent(creds.student_id)}`)
+                    .then(res => res.json())
+                    .then(res => {
+                        if(res.success) {
+                            classHistory = res.dashboard.history;
+                            updateDashboardUI(res.dashboard);
+                            evaluateLocksAndBadges();
+                        }
+                    })
+                    .catch(err => console.error(err));
+            }
+        });
+
+        function switchTab(tabId) {
+            document.getElementById('view-dashboard').style.display = tabId === 'dashboard' ? 'block' : 'none';
+            document.getElementById('view-class').style.display = tabId === 'class' ? 'block' : 'none';
+            
+            const activeClass = "py-2.5 sm:px-5 sm:py-2 text-sm font-semibold sm:rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm transition-all text-center";
+            const inactiveClass = "py-2.5 sm:px-5 sm:py-2 text-sm font-semibold sm:rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all text-center";
+            
+            document.getElementById('tab-dashboard').className = tabId === 'dashboard' ? activeClass : inactiveClass;
+            document.getElementById('tab-class').className = tabId === 'class' ? activeClass : inactiveClass;
+        }
+
+        function fadeOut(elementId, callback) {
+            const el = document.getElementById(elementId);
+            el.classList.remove('opacity-100', 'animate-swoop'); el.classList.add('opacity-0');
+            setTimeout(() => { el.classList.add('hidden'); if(callback) callback(); }, 300);
+        }
+        function fadeInSwoop(elementId) {
+            const el = document.getElementById(elementId);
+            el.classList.remove('hidden');
+            void el.offsetWidth; 
+            el.classList.add('animate-swoop');
+        }
+
+        function showGlobalError(message) {
+            const banner = document.getElementById('globalError');
+            banner.innerText = message;
+            banner.classList.remove('hidden');
+            void banner.offsetWidth;
+            banner.classList.remove('opacity-0'); banner.classList.add('opacity-100');
+            setTimeout(() => { fadeOut('globalError'); }, 4000);
+        }
+
+        function handleLogin() {
+            const lastName = document.getElementById('lastName').value;
+            const studentId = document.getElementById('studentId').value;
+            const errorDiv = document.getElementById('loginError');
+            
+            if(!lastName || !studentId) {
+                errorDiv.innerText = "Please enter both fields.";
+                errorDiv.classList.remove('hidden'); return;
+            }
+
+            const now = Date.now();
+            const lastAttempt = parseInt(sessionStorage.getItem('last_login_time')) || 0;
+            if (now - lastAttempt < 3000) {
+                showGlobalError("Loading too fast. Please wait a moment.");
+                return;
+            }
+            sessionStorage.setItem('last_login_time', now);
+
+            errorDiv.classList.add('hidden');
+            document.getElementById('loginBtnText').innerText = "Verifying...";
+            document.getElementById('loginSpinner').classList.remove('hidden');
+
+            fetch(`${GAS_API_URL}?action=login&lastName=${encodeURIComponent(lastName)}&studentId=${encodeURIComponent(studentId)}`)
+                .then(res => res.json())
+                .then(onLoginSuccess)
+                .catch(onSystemError);
+        }
+
+        function onLoginSuccess(response) {
+            document.getElementById('loginBtnText').innerText = "Sign In";
+            document.getElementById('loginSpinner').classList.add('hidden');
+
+            if(response.success) {
+                currentUser = response.user;
+                currentClass = response.active_class;
+                classHistory = response.dashboard.history;
+                
+                localStorage.setItem('preface_student_creds', JSON.stringify({
+                    last_name: document.getElementById('lastName').value,
+                    student_id: currentUser.student_id
+                }));
+                
+                document.getElementById('studentNameDisplay').innerText = currentUser.student_name;
+                updateDashboardUI(response.dashboard);
+
+                if(currentClass) {
+                    document.getElementById('courseNameDisplay').innerText = currentClass.course_name;
+                    document.getElementById('sessionDisplay').innerText = currentClass.session;
+                    document.getElementById('classEmptyState').classList.add('hidden');
+                    document.getElementById('classActiveState').classList.remove('hidden');
+                    evaluateLocksAndBadges();
+                } else {
+                    document.getElementById('classActiveState').classList.add('hidden');
+                    document.getElementById('classEmptyState').classList.remove('hidden');
+                }
+
+                fadeOut('loginSection', () => { 
+                    fadeInSwoop('appSection'); 
+                    switchTab('dashboard'); 
+                });
+            } else {
+                const errorDiv = document.getElementById('loginError');
+                errorDiv.innerText = response.message;
+                errorDiv.classList.remove('hidden');
+                localStorage.removeItem('preface_student_creds');
+            }
+        }
+
+        function updateDashboardUI(dashboard) {
+            document.getElementById('scoreText').innerText = dashboard.total_score;
+            document.getElementById('maxScoreDisplay').innerText = "200"; 
+            const fillPercentage = Math.min(100, Math.max(0, (dashboard.total_score / 200) * 100));
+            document.getElementById('scoreCircle').setAttribute('stroke-dasharray', `${fillPercentage}, 100`);
+
+            const grid = document.getElementById('heatmapGrid');
+            const list = document.getElementById('historyListContainer');
+            grid.innerHTML = '';
+            list.innerHTML = '';
+            
+            for(let i = 0; i < 40; i++) { 
+                const block = document.createElement('div');
+                block.className = 'w-4 h-4 sm:w-5 sm:h-5 rounded-[2px] sm:rounded-[3px] relative group';
+                
+                if(i < dashboard.history.length) {
+                    const cls = dashboard.history[dashboard.history.length - 1 - i]; 
+                    const pts = cls.points;
+                    
+                    if(pts === 5) block.classList.add('block-3');
+                    else if(pts >= 3) block.classList.add('block-2');
+                    else if(pts >= 1) block.classList.add('block-1');
+                    else block.classList.add('block-0');
+
+                    block.onclick = () => showScoreBreakdown(cls.happening_id);
+
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'hover-tooltip';
+                    tooltip.innerHTML = `<span class="font-bold tracking-wide">${cls.course_name} (L${cls.session})</span><br><span class="opacity-75 font-normal">${cls.date} &middot; <span class="text-white">${pts} pts</span></span>`;
+                    block.appendChild(tooltip);
+                    
+                } else {
+                    block.classList.add('block-0'); 
+                }
+                grid.appendChild(block);
+            }
+
+            dashboard.history.forEach(cls => {
+                const listItem = document.createElement('div');
+                listItem.className = 'flex items-center justify-between p-3 sm:p-4 bg-white dark:bg-gray-800 border border-brandBorder dark:border-gray-700 rounded-xl shadow-sm hover:border-gray-300 dark:hover:border-gray-500 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-md cursor-pointer';
+                listItem.onclick = () => showScoreBreakdown(cls.happening_id); 
+                
+                listItem.innerHTML = `
+                    <div class="flex items-center gap-3 sm:gap-4 overflow-hidden pr-2">
+                        <div class="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-50 dark:bg-gray-700 flex items-center justify-center text-brandStudent dark:text-gray-300 font-bold text-xs sm:text-sm border border-blue-100 dark:border-gray-600">${cls.course_name}</div>
+                        <div class="truncate">
+                            <h4 class="font-bold text-gray-900 dark:text-white leading-tight text-sm sm:text-base truncate">${cls.course_name}</h4>
+                            <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 mt-0.5 font-medium truncate">Session ${cls.session}</p>
+                        </div>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                        <span class="inline-flex items-center justify-center px-2 py-1 sm:px-3 rounded-full bg-green-100 dark:bg-gray-700 text-green-700 dark:text-green-400 text-[10px] sm:text-xs font-bold border border-green-200 dark:border-gray-600">+${cls.points} pts</span>
+                    </div>
+                `;
+                list.appendChild(listItem);
+            });
+            
+            if(dashboard.history.length === 0) {
+                list.innerHTML = `<p class="text-sm text-brandSecondary dark:text-gray-400 py-4 text-center">No assessments completed yet.</p>`;
+            }
+        }
+
+        function showScoreBreakdown(hapId) {
+            const cls = classHistory.find(h => String(h.happening_id) === String(hapId));
+            if(!cls) return;
+
+            document.getElementById('scoreModalSubtitle').innerText = `${cls.course_name} (Session ${cls.session})`;
+            
+            const prePts = cls.pre_done ? 1 : 0;
+            const postPts = cls.post_done ? 1 : 0;
+            const accuracyPts = cls.points - prePts - postPts;
+
+            const preText = document.getElementById('breakdownPre');
+            preText.innerText = prePts ? '+1 pt' : '0 pt';
+            preText.className = prePts ? 'text-sm font-bold text-green-600 dark:text-green-400' : 'text-sm font-bold text-gray-400 dark:text-gray-500';
+
+            const postText = document.getElementById('breakdownPost');
+            postText.innerText = postPts ? '+1 pt' : '0 pt';
+            postText.className = postPts ? 'text-sm font-bold text-green-600 dark:text-green-400' : 'text-sm font-bold text-gray-400 dark:text-gray-500';
+
+            const accText = document.getElementById('breakdownAccuracy');
+            accText.innerText = `+${accuracyPts} pts`;
+            accText.className = accuracyPts > 0 ? 'text-sm font-bold text-brandStudent dark:text-blue-400' : 'text-sm font-bold text-gray-400 dark:text-gray-500';
+
+            document.getElementById('breakdownTotal').innerText = `${cls.points} pts`;
+
+            const overlay = document.getElementById('scoreTabOverlay');
+            overlay.classList.remove('hidden');
+            void overlay.offsetWidth; 
+            overlay.classList.remove('opacity-0'); overlay.classList.add('opacity-100');
+            
+            const tab = document.getElementById('scoreTab');
+            tab.classList.remove('translate-x-full'); tab.classList.add('translate-x-0');
+
+            if (cls.points === 5) {
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: { y: 1, x: 0.5 },
+                    zIndex: 10000,
+                    colors: ['#38BDF8', '#10B981', '#FCD34D', '#A78BFA', '#F472B6']
+                });
+            }
+        }
+
+        function closeScoreTab() {
+            const tab = document.getElementById('scoreTab');
+            tab.classList.remove('translate-x-0'); tab.classList.add('translate-x-full');
+            
+            const overlay = document.getElementById('scoreTabOverlay');
+            overlay.classList.remove('opacity-100'); overlay.classList.add('opacity-0');
+            setTimeout(() => { overlay.classList.add('hidden'); }, 300);
+        }
+
+        function evaluateLocksAndBadges() {
+            if(!currentClass) return;
+            const hapId = currentClass.happening_id;
+            
+            const historyMatch = classHistory.find(h => String(h.happening_id) === String(hapId));
+            const dbPreDone = historyMatch ? historyMatch.pre_done : false;
+            const dbPostDone = historyMatch ? historyMatch.post_done : false;
+
+            const localPreTime = parseInt(localStorage.getItem(`pre_clicked_${hapId}`)) || 0;
+            const localPostTime = parseInt(localStorage.getItem(`post_clicked_${hapId}`)) || 0;
+
+            const btnPre = document.getElementById('btnPre');
+            const badgePre = document.getElementById('badgePre');
+            const btnPost = document.getElementById('btnPost');
+            const badgePost = document.getElementById('badgePost');
+            const postHelper = document.getElementById('postHelperText');
+
+            if(dbPreDone) {
+                btnPre.classList.add('hidden');
+                badgePre.innerText = "✓ Pre Completed";
+                badgePre.className = "w-full px-4 py-3 sm:py-4 rounded-xl text-center font-bold shadow-sm bg-brandSuccess text-white block text-sm tracking-wide";
+            } else if (localPreTime > 0) {
+                btnPre.classList.add('hidden');
+                badgePre.innerText = "⟳ Processing Score...";
+                badgePre.className = "w-full px-4 py-3 sm:py-4 rounded-xl text-center font-bold shadow-sm bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 block text-sm tracking-wide border border-gray-200 dark:border-gray-600";
+            } else {
+                btnPre.classList.remove('hidden');
+                badgePre.classList.add('hidden');
+            }
+
+            const tenMinsPassed = (Date.now() - localPreTime) >= (10 * 60 * 1000);
+            
+            if(dbPostDone) {
+                btnPost.classList.add('hidden');
+                badgePost.innerText = "✓ Post Completed";
+                badgePost.className = "w-full px-4 py-3 sm:py-4 rounded-xl text-center font-bold shadow-sm bg-brandSuccess text-white block text-sm tracking-wide";
+                postHelper.classList.add('hidden');
+            } else if (localPostTime > 0) {
+                btnPost.classList.add('hidden');
+                badgePost.innerText = "⟳ Processing Score...";
+                badgePost.className = "w-full px-4 py-3 sm:py-4 rounded-xl text-center font-bold shadow-sm bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 block text-sm tracking-wide border border-gray-200 dark:border-gray-600";
+                postHelper.classList.add('hidden');
+            } else if (dbPreDone || (localPreTime > 0 && tenMinsPassed)) {
+                btnPost.classList.remove('hidden', 'btn-disabled');
+                btnPost.classList.add('btn-gradient');
+                btnPost.innerHTML = "Start Post-Assessment";
+                btnPost.onclick = () => startAssessment('Post');
+                badgePost.classList.add('hidden');
+                postHelper.innerText = "Ready to begin.";
+                postHelper.className = "text-xs text-brandStudent mt-3 sm:mt-4 text-center font-bold";
+            } else {
+                btnPost.classList.remove('hidden', 'btn-gradient');
+                btnPost.classList.add('btn-disabled');
+                btnPost.innerHTML = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg> Post-Assessment`;
+                btnPost.onclick = () => showGlobalError("Please wait 10 minutes after starting the Pre-Assessment.");
+                badgePost.classList.add('hidden');
+            }
+        }
+
+        function startAssessment(type) {
+            if(!currentClass) return;
+            const hapId = currentClass.happening_id;
+            
+            const btn = document.getElementById(`btn${type}`);
+            const originalText = btn.innerText;
+            btn.innerText = "Loading...";
+
+            fetch(`${GAS_API_URL}?action=getFormLink&studentId=${encodeURIComponent(currentUser.student_id)}&happeningId=${encodeURIComponent(hapId)}&type=${encodeURIComponent(type)}`)
+                .then(res => res.json())
+                .then(res => {
+                    btn.innerText = originalText;
+                    if(res.success) {
+                        localStorage.setItem(`${type.toLowerCase()}_clicked_${hapId}`, Date.now());
+                        window.open(res.url, '_blank');
+                        evaluateLocksAndBadges(); 
+                    } else {
+                        showGlobalError(res.message);
+                    }
+                })
+                .catch(e => {
+                    btn.innerText = originalText;
+                    showGlobalError("System Error: " + e.message);
+                });
+        }
+
+        function openOverride() {
+            document.getElementById('overrideError').classList.add('hidden');
+            document.getElementById('overrideHappeningId').value = '';
+            document.getElementById('overrideTeacherId').value = '';
+            
+            const modal = document.getElementById('overrideModal');
+            modal.classList.remove('hidden');
+            void modal.offsetWidth; 
+            modal.classList.remove('opacity-0'); modal.classList.add('opacity-100');
+            document.getElementById('overrideModalInner').classList.remove('scale-95');
+            document.getElementById('overrideModalInner').classList.add('scale-100');
+        }
+
+        function closeGate(modalId, innerId) {
+            document.getElementById(innerId).classList.remove('scale-100');
+            document.getElementById(innerId).classList.add('scale-95');
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('opacity-100'); modal.classList.add('opacity-0');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        function submitOverride() {
+            const hapId = document.getElementById('overrideHappeningId').value;
+            const type = document.getElementById('overrideType').value;
+            const teacherId = document.getElementById('overrideTeacherId').value;
+            const errorDiv = document.getElementById('overrideError');
+
+            if(!hapId || !teacherId) { errorDiv.innerText = "Please enter all fields."; errorDiv.classList.remove('hidden'); return; }
+
+            errorDiv.classList.add('hidden');
+            document.getElementById('overrideBtnText').innerText = "Verifying...";
+            document.getElementById('overrideSpinner').classList.remove('hidden');
+
+            fetch(`${GAS_API_URL}?action=verifyOverride&studentId=${encodeURIComponent(currentUser.student_id)}&happeningId=${encodeURIComponent(hapId)}&teacherId=${encodeURIComponent(teacherId)}&type=${encodeURIComponent(type)}`)
+                .then(res => res.json())
+                .then(res => {
+                    document.getElementById('overrideBtnText').innerText = "Force Unlock";
+                    document.getElementById('overrideSpinner').classList.add('hidden');
+                    if(res.success) {
+                        closeGate('overrideModal', 'overrideModalInner');
+                        window.open(res.url, '_blank');
+                    } else {
+                        errorDiv.innerText = res.message;
+                        errorDiv.classList.remove('hidden');
+                    }
+                })
+                .catch(e => {
+                    showGlobalError(e.message);
+                    document.getElementById('overrideBtnText').innerText = "Force Unlock";
+                    document.getElementById('overrideSpinner').classList.add('hidden');
+                });
+        }
+
+        function logout() {
+            localStorage.removeItem('preface_student_creds');
+            fadeOut('appSection', () => {
+                currentUser = null;
+                currentClass = null;
+                document.getElementById('lastName').value = '';
+                document.getElementById('studentId').value = '';
+                
+                const loginSection = document.getElementById('loginSection');
+                loginSection.classList.remove('hidden');
+                void loginSection.offsetWidth;
+                loginSection.classList.remove('opacity-0'); loginSection.classList.add('opacity-100');
+            });
+        }
+
+        function onSystemError(error) { 
+            showGlobalError("System Error: " + error.message);
+            document.getElementById('loginBtnText').innerText = "Sign In"; 
+            document.getElementById('loginSpinner').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

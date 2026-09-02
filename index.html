@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Preface | Student Portal</title>
     
-    <link id="favicon" rel="icon" type="image/png" href="https://github.com/17laun1-sunny/preface-student-portal/blob/main/P%20Logo_Grey.png?raw=true">
+    <!-- OPTIMIZATION 1: Preconnect to Google's API servers to save DNS lookup time -->
+    <link rel="preconnect" href="https://script.google.com">
+    <link rel="preconnect" href="https://script.googleusercontent.com">
+    
+    <!-- OPTIMIZATION 3: Local Image Path -->
+    <link id="favicon" rel="icon" type="image/png" href="./P%20Logo_Grey.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -13,7 +19,9 @@
             theme: { extend: { colors: { brandBase: '#F9F8F5', brandSurface: '#FFFFFF', brandPrimary: '#111827', brandSecondary: '#6B7280', brandSuccess: '#10B981', brandStudent: '#0284C7', brandBorder: '#E5E7EB' }, fontFamily: { sans: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif'] } } }
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- OPTIMIZATION 2: Defer attribute added -->
+    <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
         body { transition: background-color 0.3s ease, color 0.3s ease; overflow-x: hidden; }
@@ -65,6 +73,13 @@
 
     <div id="globalError" class="hidden opacity-0 transition-opacity duration-300 fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-6 py-3 rounded-lg shadow-md z-50 text-sm font-medium"></div>
 
+    <!-- OPTIMIZATION 4: Smooth Background Syncing Indicator -->
+    <div id="syncIndicator" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-brandPrimary dark:bg-white text-white dark:text-brandPrimary text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full shadow-md z-50 flex items-center gap-1.5 transition-all duration-300 opacity-0 -translate-y-4 pointer-events-none">
+        <svg class="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+        Syncing Data...
+    </div>
+
+    <!-- Theme Toggle -->
     <div class="fixed bottom-6 left-6 sm:bottom-8 sm:left-8 z-40">
         <button onclick="toggleTheme()" class="p-3 rounded-full bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
             <svg id="themeIcon" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -73,10 +88,12 @@
         </button>
     </div>
 
+    <!-- Back to Top Button -->
     <button id="backToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="hidden opacity-0 fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40 p-3 rounded-full bg-brandPrimary dark:bg-white text-white dark:text-brandPrimary shadow-lg hover:scale-105 transition-all duration-300">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path></svg>
     </button>
 
+    <!-- SKELETON LOADER -->
     <div id="skeletonLoader" class="hidden w-full max-w-2xl mt-2 sm:mt-4 animate-pulse">
         <div class="flex justify-between items-center mb-6 sm:mb-8 px-1">
             <div class="h-8 bg-gray-200 dark:bg-gray-700 rounded-md w-48 sm:w-64"></div>
@@ -104,8 +121,9 @@
     <!-- LOGIN SECTION -->
     <div id="loginSection" class="hidden w-full max-w-sm mt-8 sm:mt-12 transition-opacity duration-300 opacity-100">
         <div class="text-center mb-8 sm:mb-10">
-            <img src="https://github.com/17laun1-sunny/preface-student-portal/blob/main/Preface%20Logo_Grey.png?raw=true" alt="Preface Logo" class="block dark:hidden h-12 sm:h-16 mx-auto mb-2 sm:mb-4 object-contain">
-            <img src="https://github.com/17laun1-sunny/preface-student-portal/blob/main/Preface%20Logo_Whitepng.png?raw=true" alt="Preface Logo" class="hidden dark:block h-12 sm:h-16 mx-auto mb-2 sm:mb-4 object-contain">
+            <!-- OPTIMIZATION 3: Local Image Paths -->
+            <img src="./Preface%20Logo_Grey.png" alt="Preface Logo" class="block dark:hidden h-12 sm:h-16 mx-auto mb-2 sm:mb-4 object-contain">
+            <img src="./Preface%20Logo_Whitepng.png" alt="Preface Logo" class="hidden dark:block h-12 sm:h-16 mx-auto mb-2 sm:mb-4 object-contain">
             <p class="text-brandSecondary dark:text-gray-400 text-sm">Assessment Portal</p>
         </div>
         <div class="bg-brandSurface dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-sm border border-brandBorder dark:border-gray-700 max-h-[85vh] overflow-y-auto">
@@ -186,7 +204,6 @@
             <!-- TAB 2: TODAY'S CLASS -->
             <div id="view-class" class="col-start-1 row-start-1 w-full transition-all duration-500 ease-in-out transform translate-x-full opacity-0 z-0 pointer-events-none space-y-6 pb-20">
                 
-                <!-- NEW: Dynamic Stacked Class Container -->
                 <div id="activeClassesContainer" class="space-y-6"></div>
 
                 <div id="classEmptyState" class="hidden text-center py-12 sm:py-16 bg-brandSurface dark:bg-gray-800 rounded-2xl border border-brandBorder dark:border-gray-700 shadow-sm">
@@ -204,7 +221,7 @@
         </div> 
     </div>
 
-    <!-- SCORE BREAKDOWN BOTTOM SHEET / SIDE TAB -->
+    <!-- SCORE BREAKDOWN BOTTOM SHEET -->
     <div id="scoreTabOverlay" onclick="closeScoreTab()" class="hidden fixed inset-0 z-40 bg-brandPrimary bg-opacity-40 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
     
     <div id="scoreTab" class="fixed z-50 bg-brandSurface dark:bg-gray-800 shadow-2xl flex flex-col sm:border-l border-brandBorder dark:border-gray-700
@@ -278,7 +295,6 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        // CRITICAL: PASTE YOUR NEW APP SCRIPT URL HERE!
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwSrqeP1-nvEozp1yUSqDHeCHUbhH-VzU98DUkN62FnlgM3x0RDfYFV79LyHvTaHjJH4Q/exec";
 
         let currentUser = null;
@@ -294,41 +310,92 @@
                 html.classList.remove('dark');
                 localStorage.setItem('theme', 'light');
                 icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />';
-                favicon.href = "https://github.com/17laun1-sunny/preface-student-portal/blob/main/P%20Logo_Grey.png?raw=true";
+                favicon.href = "./P%20Logo_Grey.png";
             } else {
                 html.classList.add('dark');
                 localStorage.setItem('theme', 'dark');
                 icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
-                favicon.href = "https://github.com/17laun1-sunny/preface-student-portal/blob/main/P%20Logo_White.png?raw=true";
+                favicon.href = "./P%20Logo_White.png";
             }
         }
         
+        // OPTIMIZATION 4: The Stale-While-Revalidate Boot Sequence
         window.onload = () => {
             if (localStorage.getItem('theme') === 'dark') {
                 document.documentElement.classList.add('dark');
                 document.getElementById('themeIcon').innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />';
-                document.getElementById('favicon').href = "https://github.com/17laun1-sunny/preface-student-portal/blob/main/P%20Logo_White.png?raw=true";
+                document.getElementById('favicon').href = "./P%20Logo_White.png";
             }
             
-            const saved = localStorage.getItem('preface_student_creds');
-            if(saved) {
-                document.getElementById('skeletonLoader').classList.remove('hidden');
-                const creds = JSON.parse(saved);
+            const savedCreds = localStorage.getItem('preface_student_creds');
+            const cachedRes = localStorage.getItem('preface_cached_response');
+            
+            if(savedCreds) {
+                const creds = JSON.parse(savedCreds);
                 document.getElementById('lastName').value = creds.last_name;
                 document.getElementById('studentId').value = creds.student_id;
                 
-                fetch(`${GAS_API_URL}?action=login&lastName=${encodeURIComponent(creds.last_name)}&studentId=${encodeURIComponent(creds.student_id)}`)
-                    .then(res => res.json())
-                    .then(onLoginSuccess)
-                    .catch(err => {
-                        document.getElementById('skeletonLoader').classList.add('hidden');
-                        document.getElementById('loginSection').classList.remove('hidden');
-                        onSystemError(err);
-                    });
+                if (cachedRes) {
+                    // Instantly render from local memory!
+                    applyDataToUI(JSON.parse(cachedRes));
+                    document.getElementById('loginSection').classList.add('hidden');
+                    fadeInSwoop('appSection'); 
+                    switchTab('dashboard');
+                    
+                    // Silently sync with Google in the background
+                    backgroundSync(creds.last_name, creds.student_id);
+                } else {
+                    // First time or cache cleared: show skeleton loader
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('skeletonLoader').classList.remove('hidden');
+                    backgroundSync(creds.last_name, creds.student_id);
+                }
             } else {
                 document.getElementById('loginSection').classList.remove('hidden');
             }
         };
+
+        function backgroundSync(lastName, studentId) {
+            const syncIcon = document.getElementById('syncIndicator');
+            syncIcon.classList.remove('opacity-0', '-translate-y-4');
+            
+            sessionStorage.setItem('last_sync_time', Date.now());
+
+            fetch(`${GAS_API_URL}?action=login&lastName=${encodeURIComponent(lastName)}&studentId=${encodeURIComponent(studentId)}`)
+                .then(res => res.json())
+                .then(res => {
+                    syncIcon.classList.add('opacity-0', '-translate-y-4');
+                    if(res.success) {
+                        localStorage.setItem('preface_cached_response', JSON.stringify(res));
+                        applyDataToUI(res);
+                        
+                        if (!document.getElementById('skeletonLoader').classList.contains('hidden')) {
+                            document.getElementById('skeletonLoader').classList.add('hidden');
+                            fadeInSwoop('appSection'); 
+                            switchTab('dashboard');
+                        }
+                    } else {
+                        logout();
+                    }
+                })
+                .catch(err => {
+                    syncIcon.classList.add('opacity-0', '-translate-y-4');
+                    console.error("Background sync failed: ", err);
+                    if (!document.getElementById('skeletonLoader').classList.contains('hidden')) {
+                        onSystemError(err);
+                    }
+                });
+        }
+
+        function applyDataToUI(response) {
+            currentUser = response.user;
+            activeClasses = response.active_classes || [];
+            classHistory = response.dashboard.history;
+            
+            document.getElementById('studentNameDisplay').innerText = currentUser.student_name;
+            updateDashboardUI(response.dashboard);
+            renderActiveClasses();
+        }
 
         window.addEventListener('scroll', () => {
             const btn = document.getElementById('backToTopBtn');
@@ -345,25 +412,13 @@
             if (document.visibilityState === 'visible' && currentUser) {
                 const now = Date.now();
                 const lastSync = parseInt(sessionStorage.getItem('last_sync_time')) || 0;
-                if (now - lastSync < 3000) return;
-                sessionStorage.setItem('last_sync_time', now);
+                if (now - lastSync < 3000) return; // Debounce fast switching
 
                 const saved = localStorage.getItem('preface_student_creds');
                 if(!saved) return;
                 const creds = JSON.parse(saved);
-
-                fetch(`${GAS_API_URL}?action=login&lastName=${encodeURIComponent(creds.last_name)}&studentId=${encodeURIComponent(creds.student_id)}`)
-                    .then(res => res.json())
-                    .then(res => {
-                        if(res.success) {
-                            classHistory = res.dashboard.history;
-                            updateDashboardUI(res.dashboard);
-                            
-                            activeClasses = res.active_classes || [];
-                            renderActiveClasses();
-                        }
-                    })
-                    .catch(err => console.error(err));
+                
+                backgroundSync(creds.last_name, creds.student_id);
             }
         });
 
@@ -440,36 +495,28 @@
 
             fetch(`${GAS_API_URL}?action=login&lastName=${encodeURIComponent(lastName)}&studentId=${encodeURIComponent(studentId)}`)
                 .then(res => res.json())
-                .then(onLoginSuccess)
+                .then(res => {
+                    if(res.success) {
+                        localStorage.setItem('preface_student_creds', JSON.stringify({
+                            last_name: lastName,
+                            student_id: res.user.student_id
+                        }));
+                        localStorage.setItem('preface_cached_response', JSON.stringify(res));
+                        
+                        applyDataToUI(res);
+
+                        document.getElementById('skeletonLoader').classList.add('hidden');
+                        fadeInSwoop('appSection'); 
+                        switchTab('dashboard'); 
+                    } else {
+                        document.getElementById('skeletonLoader').classList.add('hidden');
+                        errorDiv.innerText = res.message;
+                        errorDiv.classList.remove('hidden');
+                        document.getElementById('loginSection').classList.remove('hidden');
+                        localStorage.removeItem('preface_student_creds');
+                    }
+                })
                 .catch(onSystemError);
-        }
-
-        function onLoginSuccess(response) {
-            if(response.success) {
-                currentUser = response.user;
-                activeClasses = response.active_classes || [];
-                classHistory = response.dashboard.history;
-                
-                localStorage.setItem('preface_student_creds', JSON.stringify({
-                    last_name: document.getElementById('lastName').value,
-                    student_id: currentUser.student_id
-                }));
-                
-                document.getElementById('studentNameDisplay').innerText = currentUser.student_name;
-                updateDashboardUI(response.dashboard);
-                renderActiveClasses();
-
-                document.getElementById('skeletonLoader').classList.add('hidden');
-                fadeInSwoop('appSection'); 
-                switchTab('dashboard'); 
-            } else {
-                document.getElementById('skeletonLoader').classList.add('hidden');
-                const errorDiv = document.getElementById('loginError');
-                errorDiv.innerText = response.message;
-                errorDiv.classList.remove('hidden');
-                document.getElementById('loginSection').classList.remove('hidden');
-                localStorage.removeItem('preface_student_creds');
-            }
         }
 
         function renderActiveClasses() {
@@ -794,6 +841,7 @@
 
         function logout() {
             localStorage.removeItem('preface_student_creds');
+            localStorage.removeItem('preface_cached_response');
             fadeOut('appSection', () => {
                 currentUser = null;
                 activeClasses = [];

@@ -2,23 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Preface | Student Portal</title>
     
-    <!-- OPTIMIZATION 1: Preconnect to Google's API servers to save DNS lookup time -->
     <link rel="preconnect" href="https://script.google.com">
     <link rel="preconnect" href="https://script.googleusercontent.com">
     
-    <!-- OPTIMIZATION 3: Local Image Path -->
     <link id="favicon" rel="icon" type="image/png" href="./P%20Logo_Grey.png">
-    
     <link rel="stylesheet" href="./output.css">
     
-    <!-- OPTIMIZATION 2: Defer attribute added -->
     <script defer src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-        body { transition: background-color 0.3s ease, color 0.3s ease; overflow-x: hidden; }
+        html, body { max-width: 100vw; overflow-x: hidden; touch-action: pan-y; transition: background-color 0.3s ease, color 0.3s ease; }
         
         .btn-gradient { background: #111827; color: #FFFFFF; font-weight: 600; transition: all 0.2s ease; }
         .btn-gradient:hover { background: #1F2937; transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
@@ -67,7 +63,6 @@
 
     <div id="globalError" class="hidden opacity-0 transition-opacity duration-300 fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-6 py-3 rounded-lg shadow-md z-50 text-sm font-medium"></div>
 
-    <!-- OPTIMIZATION 4: Smooth Background Syncing Indicator -->
     <div id="syncIndicator" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-brandPrimary dark:bg-white text-white dark:text-brandPrimary text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full shadow-md z-50 flex items-center gap-1.5 transition-all duration-300 opacity-0 -translate-y-4 pointer-events-none">
         <svg class="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
         Syncing Data...
@@ -115,7 +110,6 @@
     <!-- LOGIN SECTION -->
     <div id="loginSection" class="hidden w-full max-w-sm mt-8 sm:mt-12 transition-opacity duration-300 opacity-100">
         <div class="text-center mb-8 sm:mb-10">
-            <!-- OPTIMIZATION 3: Local Image Paths -->
             <img src="./Preface%20Logo_Grey.png" alt="Preface Logo" class="block dark:hidden h-12 sm:h-16 mx-auto mb-2 sm:mb-4 object-contain">
             <img src="./Preface%20Logo_Whitepng.png" alt="Preface Logo" class="hidden dark:block h-12 sm:h-16 mx-auto mb-2 sm:mb-4 object-contain">
             <p class="text-brandSecondary dark:text-gray-400 text-sm">Assessment Portal</p>
@@ -255,45 +249,77 @@
         </div>
     </div>
 
-    <!-- TEACHER OVERRIDE GATE -->
-    <div id="overrideModal" class="hidden opacity-0 transition-opacity duration-300 fixed inset-0 z-50 bg-brandPrimary bg-opacity-40 backdrop-blur-sm items-center justify-center p-4">
-        <div class="bg-brandSurface dark:bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-sm relative transform transition-transform duration-300 scale-95 max-h-[90vh] overflow-y-auto" id="overrideModalInner">
-            <button onclick="closeGate('overrideModal', 'overrideModalInner')" class="absolute top-4 right-4 text-gray-400 hover:text-brandPrimary dark:hover:text-white">✕</button>
-            <h2 class="text-lg sm:text-xl font-bold mb-1 dark:text-white">Teacher Override</h2>
-            <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-6">Authorization required.</p>
+    <!-- TEACHER OVERRIDE BOTTOM SHEET -->
+    <div id="overrideTabOverlay" onclick="closeOverrideTab()" class="hidden fixed inset-0 z-40 bg-brandPrimary bg-opacity-40 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+    
+    <div id="overrideTab" class="fixed z-50 bg-brandSurface dark:bg-gray-800 shadow-2xl flex flex-col sm:border-l border-brandBorder dark:border-gray-700
+        bottom-0 left-0 w-full h-[65vh] rounded-t-3xl sm:rounded-none sm:top-0 sm:left-auto sm:right-0 sm:w-96 sm:h-full
+        transform transition-transform duration-300 translate-y-full sm:translate-y-0 sm:translate-x-full">
+        
+        <div class="p-6 sm:p-8 flex-grow overflow-y-auto relative">
+            <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-4 sm:hidden"></div>
+
+            <button onclick="closeOverrideTab()" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full text-gray-400 hover:text-brandPrimary dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors hidden sm:block">
+                <svg class="w-6 h-6 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <h2 class="text-xl sm:text-2xl font-bold mb-1 dark:text-white mt-2 sm:mt-0">Teacher Override</h2>
+            <p class="text-xs sm:text-sm text-brandSecondary dark:text-gray-400 mb-6 font-medium">Authorization required.</p>
             <div id="overrideError" class="hidden text-red-500 text-sm mb-4 text-center"></div>
             
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Happening ID</label>
-                    <input type="number" id="overrideHappeningId" class="w-full bg-brandBase dark:bg-gray-900 border border-brandBorder dark:border-gray-700 rounded-lg px-4 py-2 text-brandPrimary dark:text-white input-ring text-center tracking-widest">
+                    <input type="number" id="overrideHappeningId" class="w-full bg-brandBase dark:bg-gray-900 border border-brandBorder dark:border-gray-700 rounded-lg px-4 py-2.5 text-brandPrimary dark:text-white input-ring text-center tracking-widest font-mono">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Assessment</label>
-                    <select id="overrideType" class="w-full bg-brandBase dark:bg-gray-900 border border-brandBorder dark:border-gray-700 rounded-lg px-4 py-2 text-brandPrimary dark:text-white input-ring text-center">
+                    <select id="overrideType" class="w-full bg-brandBase dark:bg-gray-900 border border-brandBorder dark:border-gray-700 rounded-lg px-4 py-2.5 text-brandPrimary dark:text-white input-ring text-center">
                         <option value="Pre">Pre-Assessment</option>
                         <option value="Post">Post-Assessment</option>
                     </select>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Teacher ID (PIN)</label>
-                    <input type="password" id="overrideTeacherId" onkeypress="if(event.key === 'Enter') submitOverride()" class="w-full bg-brandBase dark:bg-gray-900 border border-brandBorder dark:border-gray-700 rounded-lg px-4 py-2 text-brandPrimary dark:text-white input-ring text-center tracking-widest" placeholder="••••">
+                    <input type="password" id="overrideTeacherId" onkeypress="if(event.key === 'Enter') submitOverride()" class="w-full bg-brandBase dark:bg-gray-900 border border-brandBorder dark:border-gray-700 rounded-lg px-4 py-2.5 text-brandPrimary dark:text-white input-ring text-center tracking-widest font-mono" placeholder="••••">
                 </div>
                 <button onclick="submitOverride()" id="overrideBtn" class="w-full btn-gradient rounded-lg py-3 mt-4 flex justify-center items-center text-sm tracking-wide">
                     <span id="overrideBtnText">Force Unlock</span>
                     <svg id="overrideSpinner" class="hidden animate-spin ml-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                 </button>
             </div>
+
+            <div class="mt-8 text-center sm:hidden">
+                <button onclick="closeOverrideTab()" class="text-xs font-bold text-gray-400">Swipe down or tap to close</button>
+            </div>
         </div>
     </div>
 
     <!-- JAVASCRIPT -->
     <script>
+        // CRITICAL: PASTE YOUR NEW APP SCRIPT URL HERE!
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwSrqeP1-nvEozp1yUSqDHeCHUbhH-VzU98DUkN62FnlgM3x0RDfYFV79LyHvTaHjJH4Q/exec";
 
         let currentUser = null;
         let activeClasses = []; 
         let classHistory = [];
+
+        // --- OPTIMIZATION 3: SILENT RETRY ENGINE ---
+        // This replaces the standard fetch. If Google crashes from too many students, it waits a random fraction of a second and silently tries again.
+        async function fetchWithRetry(url, options = {}, retries = 3, backoff = 1000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    // If network fails or throws a 500 error, we force a retry
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return await response.json(); 
+                } catch (err) {
+                    if (i === retries - 1) throw err; // Throw the error if we run out of retries
+                    const jitter = Math.floor(Math.random() * 500); // Random offset so 40 students don't retry at the exact same millisecond
+                    await new Promise(res => setTimeout(res, backoff + jitter));
+                }
+            }
+        }
 
         function toggleTheme() {
             const html = document.documentElement;
@@ -313,7 +339,6 @@
             }
         }
         
-        // OPTIMIZATION 4: The Stale-While-Revalidate Boot Sequence
         window.onload = () => {
             if (localStorage.getItem('theme') === 'dark') {
                 document.documentElement.classList.add('dark');
@@ -330,16 +355,12 @@
                 document.getElementById('studentId').value = creds.student_id;
                 
                 if (cachedRes) {
-                    // Instantly render from local memory!
                     applyDataToUI(JSON.parse(cachedRes));
                     document.getElementById('loginSection').classList.add('hidden');
                     fadeInSwoop('appSection'); 
                     switchTab('dashboard');
-                    
-                    // Silently sync with Google in the background
                     backgroundSync(creds.last_name, creds.student_id);
                 } else {
-                    // First time or cache cleared: show skeleton loader
                     document.getElementById('loginSection').classList.add('hidden');
                     document.getElementById('skeletonLoader').classList.remove('hidden');
                     backgroundSync(creds.last_name, creds.student_id);
@@ -352,32 +373,25 @@
         function backgroundSync(lastName, studentId) {
             const syncIcon = document.getElementById('syncIndicator');
             syncIcon.classList.remove('opacity-0', '-translate-y-4');
-            
             sessionStorage.setItem('last_sync_time', Date.now());
 
-            fetch(`${GAS_API_URL}?action=login&lastName=${encodeURIComponent(lastName)}&studentId=${encodeURIComponent(studentId)}`)
-                .then(res => res.json())
+            fetchWithRetry(`${GAS_API_URL}?action=login&lastName=${encodeURIComponent(lastName)}&studentId=${encodeURIComponent(studentId)}`)
                 .then(res => {
                     syncIcon.classList.add('opacity-0', '-translate-y-4');
                     if(res.success) {
                         localStorage.setItem('preface_cached_response', JSON.stringify(res));
                         applyDataToUI(res);
-                        
                         if (!document.getElementById('skeletonLoader').classList.contains('hidden')) {
                             document.getElementById('skeletonLoader').classList.add('hidden');
                             fadeInSwoop('appSection'); 
                             switchTab('dashboard');
                         }
-                    } else {
-                        logout();
-                    }
+                    } else { logout(); }
                 })
                 .catch(err => {
                     syncIcon.classList.add('opacity-0', '-translate-y-4');
                     console.error("Background sync failed: ", err);
-                    if (!document.getElementById('skeletonLoader').classList.contains('hidden')) {
-                        onSystemError(err);
-                    }
+                    if (!document.getElementById('skeletonLoader').classList.contains('hidden')) onSystemError(err);
                 });
         }
 
@@ -385,7 +399,6 @@
             currentUser = response.user;
             activeClasses = response.active_classes || [];
             classHistory = response.dashboard.history;
-            
             document.getElementById('studentNameDisplay').innerText = currentUser.student_name;
             updateDashboardUI(response.dashboard);
             renderActiveClasses();
@@ -394,11 +407,9 @@
         window.addEventListener('scroll', () => {
             const btn = document.getElementById('backToTopBtn');
             if (window.scrollY > 250) {
-                btn.classList.remove('hidden');
-                setTimeout(() => btn.classList.remove('opacity-0'), 10);
+                btn.classList.remove('hidden'); setTimeout(() => btn.classList.remove('opacity-0'), 10);
             } else {
-                btn.classList.add('opacity-0');
-                setTimeout(() => btn.classList.add('hidden'), 300);
+                btn.classList.add('opacity-0'); setTimeout(() => btn.classList.add('hidden'), 300);
             }
         }, {passive: true});
 
@@ -406,12 +417,10 @@
             if (document.visibilityState === 'visible' && currentUser) {
                 const now = Date.now();
                 const lastSync = parseInt(sessionStorage.getItem('last_sync_time')) || 0;
-                if (now - lastSync < 3000) return; // Debounce fast switching
-
+                if (now - lastSync < 3000) return;
                 const saved = localStorage.getItem('preface_student_creds');
                 if(!saved) return;
                 const creds = JSON.parse(saved);
-                
                 backgroundSync(creds.last_name, creds.student_id);
             }
         });
@@ -420,10 +429,8 @@
             const dashboardView = document.getElementById('view-dashboard');
             const classView = document.getElementById('view-class');
             const tabHighlight = document.getElementById('tab-highlight');
-            
             const activeBtnClass = "relative z-10 flex-1 py-2 text-sm font-semibold text-gray-900 dark:text-white transition-colors duration-300 text-center";
             const inactiveBtnClass = "relative z-10 flex-1 py-2 text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-300 text-center";
-
             const dashBase = "col-start-1 row-start-1 w-full transition-all duration-500 ease-in-out transform space-y-4 sm:space-y-6 pb-20";
             const classBase = "col-start-1 row-start-1 w-full transition-all duration-500 ease-in-out transform space-y-6 pb-20";
 
@@ -431,14 +438,12 @@
                 tabHighlight.style.transform = 'translateX(0)';
                 document.getElementById('tab-dashboard').className = activeBtnClass;
                 document.getElementById('tab-class').className = inactiveBtnClass;
-
                 dashboardView.className = dashBase + " translate-x-0 opacity-100 z-10 pointer-events-auto";
                 classView.className = classBase + " translate-x-full opacity-0 z-0 pointer-events-none";
             } else {
                 tabHighlight.style.transform = 'translateX(100%)';
                 document.getElementById('tab-dashboard').className = inactiveBtnClass;
                 document.getElementById('tab-class').className = activeBtnClass;
-
                 dashboardView.className = dashBase + " -translate-x-full opacity-0 z-0 pointer-events-none";
                 classView.className = classBase + " translate-x-0 opacity-100 z-10 pointer-events-auto";
             }
@@ -449,18 +454,16 @@
             el.classList.remove('opacity-100', 'animate-swoop'); el.classList.add('opacity-0');
             setTimeout(() => { el.classList.add('hidden'); if(callback) callback(); }, 300);
         }
+
         function fadeInSwoop(elementId) {
             const el = document.getElementById(elementId);
-            el.classList.remove('hidden');
-            void el.offsetWidth; 
-            el.classList.add('animate-swoop');
+            el.classList.remove('hidden'); void el.offsetWidth; el.classList.add('animate-swoop');
         }
 
         function showGlobalError(message) {
             const banner = document.getElementById('globalError');
             banner.innerText = message;
-            banner.classList.remove('hidden');
-            void banner.offsetWidth;
+            banner.classList.remove('hidden'); void banner.offsetWidth;
             banner.classList.remove('opacity-0'); banner.classList.add('opacity-100');
             setTimeout(() => { fadeOut('globalError'); }, 4000);
         }
@@ -470,35 +473,23 @@
             const studentId = document.getElementById('studentId').value;
             const errorDiv = document.getElementById('loginError');
             
-            if(!lastName || !studentId) {
-                errorDiv.innerText = "Please enter both fields.";
-                errorDiv.classList.remove('hidden'); return;
-            }
+            if(!lastName || !studentId) { errorDiv.innerText = "Please enter both fields."; errorDiv.classList.remove('hidden'); return; }
 
             const now = Date.now();
             const lastAttempt = parseInt(sessionStorage.getItem('last_login_time')) || 0;
-            if (now - lastAttempt < 3000) {
-                showGlobalError("Loading too fast. Please wait a moment.");
-                return;
-            }
+            if (now - lastAttempt < 3000) { showGlobalError("Loading too fast. Please wait a moment."); return; }
             sessionStorage.setItem('last_login_time', now);
 
             errorDiv.classList.add('hidden');
             document.getElementById('loginSection').classList.add('hidden');
             document.getElementById('skeletonLoader').classList.remove('hidden');
 
-            fetch(`${GAS_API_URL}?action=login&lastName=${encodeURIComponent(lastName)}&studentId=${encodeURIComponent(studentId)}`)
-                .then(res => res.json())
+            fetchWithRetry(`${GAS_API_URL}?action=login&lastName=${encodeURIComponent(lastName)}&studentId=${encodeURIComponent(studentId)}`)
                 .then(res => {
                     if(res.success) {
-                        localStorage.setItem('preface_student_creds', JSON.stringify({
-                            last_name: lastName,
-                            student_id: res.user.student_id
-                        }));
+                        localStorage.setItem('preface_student_creds', JSON.stringify({ last_name: lastName, student_id: res.user.student_id }));
                         localStorage.setItem('preface_cached_response', JSON.stringify(res));
-                        
                         applyDataToUI(res);
-
                         document.getElementById('skeletonLoader').classList.add('hidden');
                         fadeInSwoop('appSection'); 
                         switchTab('dashboard'); 
@@ -519,13 +510,10 @@
             container.innerHTML = '';
             
             if (activeClasses.length === 0) {
-                container.classList.add('hidden');
-                emptyState.classList.remove('hidden');
-                return;
+                container.classList.add('hidden'); emptyState.classList.remove('hidden'); return;
             }
 
-            container.classList.remove('hidden');
-            emptyState.classList.add('hidden');
+            container.classList.remove('hidden'); emptyState.classList.add('hidden');
 
             activeClasses.forEach(c => {
                 const card = document.createElement('div');
@@ -552,7 +540,6 @@
                 `;
                 container.appendChild(card);
             });
-
             evaluateLocksAndBadges();
         }
 
@@ -564,8 +551,7 @@
 
             const grid = document.getElementById('heatmapGrid');
             const list = document.getElementById('historyListContainer');
-            grid.innerHTML = '';
-            list.innerHTML = '';
+            grid.innerHTML = ''; list.innerHTML = '';
             
             dashboard.history.sort((a, b) => {
                 const timeA = (a.date && a.date !== 'TBA') ? new Date(a.date).getTime() : 0;
@@ -577,26 +563,20 @@
             for(let i = 0; i < 40; i++) { 
                 const block = document.createElement('div');
                 block.className = 'w-4 h-4 sm:w-5 sm:h-5 rounded-[2px] sm:rounded-[3px] relative group';
-                
                 const index = dashboard.history.length - 1 - i; 
                 if(index >= 0 && index < dashboard.history.length) {
                     const cls = dashboard.history[index]; 
                     const pts = cls.points;
-                    
                     if(pts === 5) block.classList.add('block-3');
                     else if(pts >= 3) block.classList.add('block-2');
                     else if(pts >= 1) block.classList.add('block-1');
                     else block.classList.add('block-0');
-
                     block.onclick = () => showScoreBreakdown(cls.happening_id);
-
                     const tooltip = document.createElement('div');
                     tooltip.className = 'hover-tooltip';
                     tooltip.innerHTML = `<span class="font-bold tracking-wide">${cls.course_name} (L${cls.session})</span><br><span class="text-green-400 font-bold tracking-wide">${pts} pts</span>`;
                     block.appendChild(tooltip);
-                } else {
-                    block.classList.add('block-0'); 
-                }
+                } else { block.classList.add('block-0'); }
                 grid.appendChild(block);
             }
 
@@ -604,7 +584,6 @@
                 const listItem = document.createElement('div');
                 listItem.className = 'flex items-center justify-between p-3 sm:p-4 bg-white dark:bg-gray-800 border border-brandBorder dark:border-gray-700 rounded-xl shadow-sm hover:border-gray-300 dark:hover:border-gray-500 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-md cursor-pointer';
                 listItem.onclick = () => showScoreBreakdown(cls.happening_id); 
-                
                 listItem.innerHTML = `
                     <div class="flex items-center gap-3 sm:gap-4 overflow-hidden pr-2">
                         <div class="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-50 dark:bg-gray-700 flex items-center justify-center text-brandStudent dark:text-gray-300 font-bold text-xs sm:text-sm border border-blue-100 dark:border-gray-600">${cls.course_name}</div>
@@ -635,7 +614,6 @@
         function showScoreBreakdown(hapId) {
             const cls = classHistory.find(h => String(h.happening_id) === String(hapId));
             if(!cls) return;
-
             document.getElementById('scoreModalSubtitle').innerText = `${cls.course_name} (Session ${cls.session})`;
             
             const prePts = cls.pre_done ? 1 : 0;
@@ -657,8 +635,7 @@
             document.getElementById('breakdownTotal').innerText = `${cls.points} pts`;
 
             const overlay = document.getElementById('scoreTabOverlay');
-            overlay.classList.remove('hidden');
-            void overlay.offsetWidth; 
+            overlay.classList.remove('hidden'); void overlay.offsetWidth; 
             overlay.classList.remove('opacity-0'); overlay.classList.add('opacity-100');
             
             const tab = document.getElementById('scoreTab');
@@ -666,13 +643,7 @@
             tab.classList.add('translate-y-0', 'sm:translate-x-0');
 
             if (cls.points === 5) {
-                confetti({
-                    particleCount: 150,
-                    spread: 80,
-                    origin: { y: 1, x: 0.5 },
-                    zIndex: 10000,
-                    colors: ['#38BDF8', '#10B981', '#FCD34D', '#A78BFA', '#F472B6']
-                });
+                confetti({ particleCount: 150, spread: 80, origin: { y: 1, x: 0.5 }, zIndex: 10000, colors: ['#38BDF8', '#10B981', '#FCD34D', '#A78BFA', '#F472B6'] });
             }
         }
 
@@ -680,7 +651,6 @@
             const tab = document.getElementById('scoreTab');
             tab.classList.remove('translate-y-0', 'sm:translate-x-0');
             tab.classList.add('translate-y-full', 'sm:translate-x-full');
-            
             const overlay = document.getElementById('scoreTabOverlay');
             overlay.classList.remove('opacity-100'); overlay.classList.add('opacity-0');
             setTimeout(() => { overlay.classList.add('hidden'); }, 300);
@@ -722,8 +692,7 @@
                     badgePre.innerText = "⟳ Processing Score...";
                     badgePre.className = "w-full px-4 py-3 sm:py-4 rounded-xl text-center font-bold shadow-sm bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 block text-sm tracking-wide border border-gray-200 dark:border-gray-600";
                 } else {
-                    btnPre.classList.remove('hidden');
-                    badgePre.classList.add('hidden');
+                    btnPre.classList.remove('hidden'); badgePre.classList.add('hidden');
                 }
 
                 const tenMinsPassed = (Date.now() - localPreTime) >= (10 * 60 * 1000);
@@ -762,22 +731,16 @@
             const originalText = btn.innerText;
             btn.innerText = "Loading...";
 
-            fetch(`${GAS_API_URL}?action=getFormLink&studentId=${encodeURIComponent(currentUser.student_id)}&happeningId=${encodeURIComponent(hapId)}&type=${encodeURIComponent(type)}`)
-                .then(res => res.json())
+            fetchWithRetry(`${GAS_API_URL}?action=getFormLink&studentId=${encodeURIComponent(currentUser.student_id)}&happeningId=${encodeURIComponent(hapId)}&type=${encodeURIComponent(type)}`)
                 .then(res => {
                     btn.innerText = originalText;
                     if(res.success) {
                         localStorage.setItem(`${type.toLowerCase()}_clicked_${hapId}`, Date.now());
                         window.open(res.url, '_blank');
                         evaluateLocksAndBadges(); 
-                    } else {
-                        showGlobalError(res.message);
-                    }
+                    } else { showGlobalError(res.message); }
                 })
-                .catch(e => {
-                    btn.innerText = originalText;
-                    showGlobalError("System Error: " + e.message);
-                });
+                .catch(e => { btn.innerText = originalText; showGlobalError("System Error: " + e.message); });
         }
 
         function openOverride() {
@@ -785,21 +748,30 @@
             document.getElementById('overrideHappeningId').value = '';
             document.getElementById('overrideTeacherId').value = '';
             
-            const modal = document.getElementById('overrideModal');
-            modal.classList.remove('hidden');
-            void modal.offsetWidth; 
-            modal.classList.remove('opacity-0'); modal.classList.add('opacity-100');
-            document.getElementById('overrideModalInner').classList.remove('scale-95');
-            document.getElementById('overrideModalInner').classList.add('scale-100');
+            const overlay = document.getElementById('overrideTabOverlay');
+            overlay.classList.remove('hidden'); void overlay.offsetWidth; 
+            overlay.classList.remove('opacity-0'); overlay.classList.add('opacity-100');
+            
+            const tab = document.getElementById('overrideTab');
+            tab.classList.remove('translate-y-full', 'sm:translate-x-full');
+            tab.classList.add('translate-y-0', 'sm:translate-x-0');
         }
 
-        function closeGate(modalId, innerId) {
-            document.getElementById(innerId).classList.remove('scale-100');
-            document.getElementById(innerId).classList.add('scale-95');
-            const modal = document.getElementById(modalId);
-            modal.classList.remove('opacity-100'); modal.classList.add('opacity-0');
-            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        function closeOverrideTab() {
+            const tab = document.getElementById('overrideTab');
+            tab.classList.remove('translate-y-0', 'sm:translate-x-0');
+            tab.classList.add('translate-y-full', 'sm:translate-x-full');
+            const overlay = document.getElementById('overrideTabOverlay');
+            overlay.classList.remove('opacity-100'); overlay.classList.add('opacity-0');
+            setTimeout(() => { overlay.classList.add('hidden'); }, 300);
         }
+
+        let touchStartOverrideY = 0;
+        const overrideTabEl = document.getElementById('overrideTab');
+        overrideTabEl.addEventListener('touchstart', e => { touchStartOverrideY = e.changedTouches[0].screenY; }, {passive: true});
+        overrideTabEl.addEventListener('touchend', e => {
+            if (e.changedTouches[0].screenY - touchStartOverrideY > 60) closeOverrideTab();
+        }, {passive: true});
 
         function submitOverride() {
             const hapId = document.getElementById('overrideHappeningId').value;
@@ -813,17 +785,14 @@
             document.getElementById('overrideBtnText').innerText = "Verifying...";
             document.getElementById('overrideSpinner').classList.remove('hidden');
 
-            fetch(`${GAS_API_URL}?action=verifyOverride&studentId=${encodeURIComponent(currentUser.student_id)}&happeningId=${encodeURIComponent(hapId)}&teacherId=${encodeURIComponent(teacherId)}&type=${encodeURIComponent(type)}`)
-                .then(res => res.json())
+            fetchWithRetry(`${GAS_API_URL}?action=verifyOverride&studentId=${encodeURIComponent(currentUser.student_id)}&happeningId=${encodeURIComponent(hapId)}&teacherId=${encodeURIComponent(teacherId)}&type=${encodeURIComponent(type)}`)
                 .then(res => {
                     document.getElementById('overrideBtnText').innerText = "Force Unlock";
                     document.getElementById('overrideSpinner').classList.add('hidden');
                     if(res.success) {
-                        closeGate('overrideModal', 'overrideModalInner');
-                        window.open(res.url, '_blank');
+                        closeOverrideTab(); window.open(res.url, '_blank');
                     } else {
-                        errorDiv.innerText = res.message;
-                        errorDiv.classList.remove('hidden');
+                        errorDiv.innerText = res.message; errorDiv.classList.remove('hidden');
                     }
                 })
                 .catch(e => {
@@ -837,11 +806,9 @@
             localStorage.removeItem('preface_student_creds');
             localStorage.removeItem('preface_cached_response');
             fadeOut('appSection', () => {
-                currentUser = null;
-                activeClasses = [];
+                currentUser = null; activeClasses = [];
                 document.getElementById('lastName').value = '';
                 document.getElementById('studentId').value = '';
-                
                 document.getElementById('loginSection').classList.remove('hidden');
                 void document.getElementById('loginSection').offsetWidth;
                 document.getElementById('loginSection').classList.remove('opacity-0'); 

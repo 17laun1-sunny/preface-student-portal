@@ -304,18 +304,16 @@
         let activeClasses = []; 
         let classHistory = [];
 
-        // --- OPTIMIZATION 3: SILENT RETRY ENGINE ---
-        // This replaces the standard fetch. If Google crashes from too many students, it waits a random fraction of a second and silently tries again.
+        // SILENT RETRY ENGINE
         async function fetchWithRetry(url, options = {}, retries = 3, backoff = 1000) {
             for (let i = 0; i < retries; i++) {
                 try {
                     const response = await fetch(url, options);
-                    // If network fails or throws a 500 error, we force a retry
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     return await response.json(); 
                 } catch (err) {
-                    if (i === retries - 1) throw err; // Throw the error if we run out of retries
-                    const jitter = Math.floor(Math.random() * 500); // Random offset so 40 students don't retry at the exact same millisecond
+                    if (i === retries - 1) throw err;
+                    const jitter = Math.floor(Math.random() * 500);
                     await new Promise(res => setTimeout(res, backoff + jitter));
                 }
             }
@@ -725,22 +723,32 @@
             });
         }
 
+        // --- OPTIMIZATION: ZERO-LATENCY FORM LAUNCH ---
         function startAssessment(type, hapId) {
             if(!hapId) return;
             const btn = document.getElementById(`btn${type}_${hapId}`);
             const originalText = btn.innerText;
-            btn.innerText = "Loading...";
 
-            fetchWithRetry(`${GAS_API_URL}?action=getFormLink&studentId=${encodeURIComponent(currentUser.student_id)}&happeningId=${encodeURIComponent(hapId)}&type=${encodeURIComponent(type)}`)
-                .then(res => {
-                    btn.innerText = originalText;
-                    if(res.success) {
-                        localStorage.setItem(`${type.toLowerCase()}_clicked_${hapId}`, Date.now());
-                        window.open(res.url, '_blank');
-                        evaluateLocksAndBadges(); 
-                    } else { showGlobalError(res.message); }
-                })
-                .catch(e => { btn.innerText = originalText; showGlobalError("System Error: " + e.message); });
+            const targetClass = activeClasses.find(c => String(c.happening_id) === String(hapId));
+            if (!targetClass) {
+                showGlobalError("Class data not found. Please refresh.");
+                return;
+            }
+
+            const targetUrl = type.toLowerCase() === 'pre' ? targetClass.pre_form_url : targetClass.post_form_url;
+
+            if (!targetUrl) {
+                showGlobalError(`System Error: Form link not configured for ${targetClass.course_name}. Please contact teacher.`);
+                return;
+            }
+
+            btn.innerText = "Launching...";
+            setTimeout(() => {
+                btn.innerText = originalText;
+                localStorage.setItem(`${type.toLowerCase()}_clicked_${hapId}`, Date.now());
+                window.open(targetUrl, '_blank');
+                evaluateLocksAndBadges(); 
+            }, 300); // Tiny UI delay for click feedback
         }
 
         function openOverride() {
@@ -773,6 +781,7 @@
             if (e.changedTouches[0].screenY - touchStartOverrideY > 60) closeOverrideTab();
         }, {passive: true});
 
+        // TEACHER OVERRIDE API CALL (Remains Live)
         function submitOverride() {
             const hapId = document.getElementById('overrideHappeningId').value;
             const type = document.getElementById('overrideType').value;

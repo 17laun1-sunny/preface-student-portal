@@ -68,7 +68,6 @@
         Syncing Data...
     </div>
 
-    <!-- Theme Toggle -->
     <div class="fixed bottom-6 left-6 sm:bottom-8 sm:left-8 z-40">
         <button onclick="toggleTheme()" class="p-3 rounded-full bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
             <svg id="themeIcon" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -77,12 +76,10 @@
         </button>
     </div>
 
-    <!-- Back to Top Button -->
     <button id="backToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="hidden opacity-0 fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40 p-3 rounded-full bg-brandPrimary dark:bg-white text-white dark:text-brandPrimary shadow-lg hover:scale-105 transition-all duration-300">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path></svg>
     </button>
 
-    <!-- SKELETON LOADER -->
     <div id="skeletonLoader" class="hidden w-full max-w-2xl mt-2 sm:mt-4 animate-pulse">
         <div class="flex justify-between items-center mb-6 sm:mb-8 px-1">
             <div class="h-8 bg-gray-200 dark:bg-gray-700 rounded-md w-48 sm:w-64"></div>
@@ -297,7 +294,7 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        // CRITICAL: PASTE YOUR NEW APP SCRIPT URL HERE!
+        // THIS IS YOUR ACTUAL WORKING API URL FROM YOUR REFERENCE CODE
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwSrqeP1-nvEozp1yUSqDHeCHUbhH-VzU98DUkN62FnlgM3x0RDfYFV79LyHvTaHjJH4Q/exec";
 
         let currentUser = null;
@@ -600,7 +597,7 @@
             if(dashboard.history.length === 0) {
                 list.innerHTML = `
                     <div class="text-center py-10 px-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-dashed border-gray-300 dark:border-gray-600">
-                        <div class="text-4xl mb-3">🚀</div>
+                        <div class="text-4xl mb-3"></div>
                         <h4 class="font-bold text-gray-900 dark:text-white mb-1">Ready to start?</h4>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mb-5">Complete your first assessment to earn points!</p>
                         <button onclick="switchTab('class')" class="btn-gradient px-4 py-2.5 rounded-lg text-sm font-semibold shadow-sm inline-block">Go to Today's Class</button>

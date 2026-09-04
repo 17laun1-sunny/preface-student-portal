@@ -63,20 +63,21 @@
 
     <div id="globalError" class="hidden opacity-0 transition-opacity duration-300 fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-6 py-3 rounded-lg shadow-md z-50 text-sm font-medium"></div>
 
-    <div id="syncIndicator" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-brandPrimary dark:bg-white text-white dark:text-brandPrimary text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full shadow-md z-50 flex items-center gap-1.5 transition-all duration-300 opacity-0 -translate-y-4 pointer-events-none">
+    <!-- Sync Indicator hidden entirely in JS now to avoid distraction, kept HTML for structure -->
+    <div id="syncIndicator" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 bg-brandPrimary dark:bg-white text-white dark:text-brandPrimary text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-full shadow-md z-50 items-center gap-1.5 transition-all duration-300 opacity-0 -translate-y-4 pointer-events-none">
         <svg class="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
         Syncing Data...
     </div>
 
     <div class="fixed bottom-6 left-6 sm:bottom-8 sm:left-8 z-40">
-        <button onclick="toggleTheme()" class="p-3 rounded-full bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+        <button onclick="toggleTheme()" aria-label="Toggle dark mode" class="p-3 rounded-full bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 shadow-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
             <svg id="themeIcon" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
             </svg>
         </button>
     </div>
 
-    <button id="backToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="hidden opacity-0 fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40 p-3 rounded-full bg-brandPrimary dark:bg-white text-white dark:text-brandPrimary shadow-lg hover:scale-105 transition-all duration-300">
+    <button id="backToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" aria-label="Scroll to top" class="hidden opacity-0 fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40 p-3 rounded-full bg-brandPrimary dark:bg-white text-white dark:text-brandPrimary shadow-lg hover:scale-105 transition-all duration-300">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"></path></svg>
     </button>
 
@@ -213,9 +214,9 @@
         bottom-0 left-0 w-full h-[55vh] rounded-t-3xl sm:rounded-none sm:top-0 sm:left-auto sm:right-0 sm:w-96 sm:h-full
         transform transition-transform duration-300 translate-y-full sm:translate-y-0 sm:translate-x-full">
         
-        <div class="p-6 sm:p-8 flex-grow overflow-y-auto relative">
+        <div class="p-6 sm:p-8 flex-grow overflow-y-auto relative overscroll-contain">
             <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-4 sm:hidden"></div>
-            <button onclick="closeScoreTab()" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full text-gray-400 hover:text-brandPrimary dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors hidden sm:block">
+            <button onclick="closeScoreTab()" aria-label="Close score breakdown" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full text-gray-400 hover:text-brandPrimary dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors hidden sm:block">
                 <svg class="w-6 h-6 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
             <h2 class="text-xl sm:text-2xl font-bold mb-1 dark:text-white mt-2 sm:mt-0" id="scoreModalTitle">Score Breakdown</h2>
@@ -253,10 +254,10 @@
         bottom-0 left-0 w-full h-[65vh] rounded-t-3xl sm:rounded-none sm:top-0 sm:left-auto sm:right-0 sm:w-96 sm:h-full
         transform transition-transform duration-300 translate-y-full sm:translate-y-0 sm:translate-x-full">
         
-        <div class="p-6 sm:p-8 flex-grow overflow-y-auto relative">
+        <div class="p-6 sm:p-8 flex-grow overflow-y-auto relative overscroll-contain">
             <div class="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-4 sm:hidden"></div>
 
-            <button onclick="closeOverrideTab()" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full text-gray-400 hover:text-brandPrimary dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors hidden sm:block">
+            <button onclick="closeOverrideTab()" aria-label="Close override panel" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full text-gray-400 hover:text-brandPrimary dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors hidden sm:block">
                 <svg class="w-6 h-6 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
             
@@ -294,7 +295,6 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        // THIS IS YOUR ACTUAL WORKING API URL FROM YOUR REFERENCE CODE
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbwSrqeP1-nvEozp1yUSqDHeCHUbhH-VzU98DUkN62FnlgM3x0RDfYFV79LyHvTaHjJH4Q/exec";
 
         let currentUser = null;
@@ -365,14 +365,12 @@
             }
         };
 
+        // BACKGROUND SYNC (Now Silent)
         function backgroundSync(lastName, studentId) {
-            const syncIcon = document.getElementById('syncIndicator');
-            syncIcon.classList.remove('opacity-0', '-translate-y-4');
             sessionStorage.setItem('last_sync_time', Date.now());
 
             fetchWithRetry(`${GAS_API_URL}?action=login&lastName=${encodeURIComponent(lastName)}&studentId=${encodeURIComponent(studentId)}`)
                 .then(res => {
-                    syncIcon.classList.add('opacity-0', '-translate-y-4');
                     if(res.success) {
                         localStorage.setItem('preface_cached_response', JSON.stringify(res));
                         applyDataToUI(res);
@@ -384,11 +382,34 @@
                     } else { logout(); }
                 })
                 .catch(err => {
-                    syncIcon.classList.add('opacity-0', '-translate-y-4');
-                    console.error("Background sync failed: ", err);
+                    console.error("Background sync failed silently: ", err);
                     if (!document.getElementById('skeletonLoader').classList.contains('hidden')) onSystemError(err);
                 });
         }
+
+        // SILENT TIME-CHECK LOOP (Checks every 60 seconds)
+        setInterval(() => {
+            if (!activeClasses || activeClasses.length === 0) return;
+            
+            const now = new Date();
+            const currentMins = now.getHours() * 60 + now.getMinutes();
+            let classesChanged = false;
+            
+            activeClasses = activeClasses.filter(c => {
+                const times = c.display_time.split(' - ');
+                if (times.length === 2) {
+                    const [endH, endM] = times[1].split(':').map(Number);
+                    const endMins = (endH * 60) + endM;
+                    if (currentMins > endMins + 30) {
+                        classesChanged = true;
+                        return false; 
+                    }
+                }
+                return true;
+            });
+
+            if (classesChanged) renderActiveClasses();
+        }, 60000);
 
         function applyDataToUI(response) {
             currentUser = response.user;
@@ -408,11 +429,12 @@
             }
         }, {passive: true});
 
+        // 5-MINUTE COOLDOWN FOR VISIBILITY CHANGE
         document.addEventListener("visibilitychange", () => {
             if (document.visibilityState === 'visible' && currentUser) {
                 const now = Date.now();
                 const lastSync = parseInt(sessionStorage.getItem('last_sync_time')) || 0;
-                if (now - lastSync < 3000) return;
+                if (now - lastSync < 300000) return; // 300000ms = 5 minutes
                 const saved = localStorage.getItem('preface_student_creds');
                 if(!saved) return;
                 const creds = JSON.parse(saved);
@@ -637,6 +659,8 @@
             tab.classList.remove('translate-y-full', 'sm:translate-x-full');
             tab.classList.add('translate-y-0', 'sm:translate-x-0');
 
+            document.body.style.overflow = 'hidden'; // Lock background scroll
+
             if (cls.points === 5) {
                 confetti({ particleCount: 150, spread: 80, origin: { y: 1, x: 0.5 }, zIndex: 10000, colors: ['#38BDF8', '#10B981', '#FCD34D', '#A78BFA', '#F472B6'] });
             }
@@ -649,6 +673,8 @@
             const overlay = document.getElementById('scoreTabOverlay');
             overlay.classList.remove('opacity-100'); overlay.classList.add('opacity-0');
             setTimeout(() => { overlay.classList.add('hidden'); }, 300);
+            
+            document.body.style.overflow = ''; // Unlock background scroll
         }
 
         let touchStartY = 0;
@@ -720,8 +746,13 @@
             });
         }
 
-        // --- OPTIMIZATION: ZERO-LATENCY FORM LAUNCH ---
         function startAssessment(type, hapId) {
+            // OFFLINE CHECK
+            if (!navigator.onLine) {
+                showGlobalError("You appear to be offline. Please reconnect to start.");
+                return;
+            }
+
             if(!hapId) return;
             const btn = document.getElementById(`btn${type}_${hapId}`);
             const originalText = btn.innerText;
@@ -745,7 +776,7 @@
                 localStorage.setItem(`${type.toLowerCase()}_clicked_${hapId}`, Date.now());
                 window.open(targetUrl, '_blank');
                 evaluateLocksAndBadges(); 
-            }, 300); // Tiny UI delay for click feedback
+            }, 300); 
         }
 
         function openOverride() {
@@ -760,6 +791,8 @@
             const tab = document.getElementById('overrideTab');
             tab.classList.remove('translate-y-full', 'sm:translate-x-full');
             tab.classList.add('translate-y-0', 'sm:translate-x-0');
+
+            document.body.style.overflow = 'hidden'; // Lock background scroll
         }
 
         function closeOverrideTab() {
@@ -769,6 +802,8 @@
             const overlay = document.getElementById('overrideTabOverlay');
             overlay.classList.remove('opacity-100'); overlay.classList.add('opacity-0');
             setTimeout(() => { overlay.classList.add('hidden'); }, 300);
+            
+            document.body.style.overflow = ''; // Unlock background scroll
         }
 
         let touchStartOverrideY = 0;
@@ -778,7 +813,6 @@
             if (e.changedTouches[0].screenY - touchStartOverrideY > 60) closeOverrideTab();
         }, {passive: true});
 
-        // TEACHER OVERRIDE API CALL (Remains Live)
         function submitOverride() {
             const hapId = document.getElementById('overrideHappeningId').value;
             const type = document.getElementById('overrideType').value;
